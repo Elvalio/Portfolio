@@ -15,7 +15,7 @@
         <router-link to="/" class="text-lg hover:text-primary">Accueil</router-link>
         <router-link to="/projects" class="text-lg hover:text-primary">Projets</router-link>
         <router-link to="/education" class="text-lg hover:text-primary">Formation</router-link>
-        <a href="/CV.pdf" download class="ml-4 inline-block bg-primary text-white px-3 py-1 rounded">Télécharger CV</a>
+        <a :href="baseUrl + 'CV.pdf'" download="CV.pdf" class="ml-4 inline-block bg-primary text-white px-3 py-1 rounded">Télécharger CV</a>
       </div>
     </div>
   </nav>
@@ -30,4 +30,7 @@ defineProps({
     default: 1
   }
 })
+
+// Base URL géré par Vite (utile si le site est servi sous /Portfolio/)
+const baseUrl = import.meta.env.BASE_URL || '/'
 </script>

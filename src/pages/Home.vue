@@ -146,7 +146,7 @@
             <h2 class="text-2xl font-bold mb-4">Travaillons ensemble</h2>
             <p class="text-muted-light mb-6">Je suis ouvert aux opportunités de stage et projets collaboratifs.</p>
             <div class="flex justify-center gap-4 flex-wrap">
-              <a href="/CV.pdf" download class="bg-primary text-white px-6 py-3 rounded-lg shadow hover:bg-primary/90 transition">
+              <a :href="baseUrl + 'CV.pdf'" download="CV.pdf" class="bg-primary text-white px-6 py-3 rounded-lg shadow hover:bg-primary/90 transition">
                 Télécharger mon CV
               </a>
               <a href="https://www.linkedin.com/in/harry-troule/" target="_blank" class="border border-primary text-primary px-6 py-3 rounded-lg hover:bg-primary/10 transition">
@@ -179,7 +179,7 @@
               <div class="space-y-2 text-muted-light text-sm">
                 <div><router-link to="/projects" class="hover:text-primary transition">Projets</router-link></div>
                 <div><router-link to="/education" class="hover:text-primary transition">Formation</router-link></div>
-                <div><a href="/CV.pdf" download class="hover:text-primary transition">Télécharger CV</a></div>
+                <div><a :href="baseUrl + 'CV.pdf'" download="CV.pdf" class="hover:text-primary transition">Télécharger CV</a></div>
               </div>
             </div>
             
