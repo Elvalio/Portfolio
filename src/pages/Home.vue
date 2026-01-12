@@ -223,6 +223,8 @@ export default {
   setup(props, { emit }) {
     const bgUrl = ref(bgImage)
     const contentSection = ref(null)
+  // Base URL géré par Vite (utile si le site est servi sous /Portfolio/)
+  const baseUrl = import.meta.env.BASE_URL || '/'
 
     const scrollToContent = () => {
       if (contentSection.value) {
@@ -274,7 +276,7 @@ export default {
       emit('update-scroll', 1)
     })
 
-    return { bgUrl, contentSection, scrollToContent }
+    return { bgUrl, contentSection, scrollToContent, baseUrl }
   }
 }
 </script>
