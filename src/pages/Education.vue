@@ -43,7 +43,7 @@
             <!-- Timeline Dot -->
             <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-purple-500 rounded-full border-4 border-gray-900 shadow-lg shadow-purple-500/50"></div>
 
-            <div class="timeline-card h-full" style="border-color: rgba(168, 85, 247, 0.3)">
+            <div class="timeline-card" style="border-color: rgba(168, 85, 247, 0.3)">
               <!-- Header with Icon and Badge -->
               <div class="flex items-start gap-4 mb-4">
                 <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-500/10 flex items-center justify-center flex-shrink-0">
@@ -94,7 +94,7 @@
             <!-- Timeline Dot -->
             <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-amber-400 rounded-full border-4 border-gray-900 shadow-lg shadow-amber-400/50"></div>
 
-            <div class="timeline-card h-full">
+            <div class="timeline-card">
               <!-- Header with Icon and Badge -->
               <div class="flex items-start gap-4 mb-4">
                 <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-500/10 flex items-center justify-center flex-shrink-0">
@@ -121,7 +121,7 @@
             <!-- Timeline Dot -->
             <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-primary rounded-full border-4 border-gray-900 shadow-lg shadow-primary/50"></div>
 
-            <div class="timeline-card active h-full">
+            <div class="timeline-card active">
               <!-- Header with Icon and Badge -->
               <div class="flex items-start gap-4 mb-4">
                 <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center flex-shrink-0">
@@ -148,7 +148,7 @@
             <!-- Timeline Dot -->
             <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-blue-500 rounded-full border-4 border-gray-900 shadow-lg shadow-blue-500/50"></div>
 
-            <div class="timeline-card highlight h-full">
+            <div class="timeline-card highlight">
               <!-- Header with Icon and Badge -->
               <div class="flex items-start gap-4 mb-4">
                 <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center flex-shrink-0">
