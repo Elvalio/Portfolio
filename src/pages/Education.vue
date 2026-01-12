@@ -1,6 +1,6 @@
 <template>
-  <section class="py-12 md:py-20 min-h-screen flex flex-col">
-    <div class="mb-8 flex-shrink-0">
+  <section class="py-8 md:py-12 flex flex-col">
+    <div class="mb-8 flex-shrink-0 px-8">
       <h2 class="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Mon Parcours</h2>
       <p class="text-muted-light text-lg">Une chronologie de ma formation et expériences professionnelles</p>
     </div>
