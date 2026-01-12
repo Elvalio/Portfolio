@@ -1,13 +1,13 @@
 <template>
-  <section class="py-12 md:py-20 h-screen flex flex-col overflow-hidden">
+  <section class="py-12 md:py-20 min-h-screen flex flex-col">
     <div class="mb-8 flex-shrink-0">
       <h2 class="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Mon Parcours</h2>
       <p class="text-muted-light text-lg">Une chronologie de ma formation et expériences professionnelles</p>
     </div>
     
     <!-- Horizontal Timeline -->
-    <div ref="timelineContainer" class="relative overflow-x-auto pb-8 scroll-smooth flex-1">
-      <div class="min-w-max px-8 relative h-full">
+    <div ref="timelineContainer" class="relative overflow-x-auto pb-8 scroll-smooth">
+      <div class="min-w-max px-8 relative">
         <!-- Timeline Line with Arrows -->
         <div class="absolute top-2 left-8 right-8 h-1 bg-gradient-to-r from-primary/20 via-primary to-primary" style="width: calc(100% - 4rem);">
           <!-- Arrow 1 -->
