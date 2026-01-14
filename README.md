@@ -1,43 +1,93 @@
-# Portfolio (Vue 3 + Tailwind)
+# 🎨 Portfolio Personnel
 
-Site scaffoldé avec Vite + Vue 3 + Tailwind CSS. Couleurs personnalisées basées sur la palette fournie.
+Un portfolio moderne et interactif créé avec **Vue.js** et **Vite**, présentant mes projets, mon parcours éducatif et mes compétences.
 
-Installation:
+## 🚀 Technologies
 
-```bash
-npm install
-npm run dev
+- **Vue.js** - Framework JavaScript progressif
+- **Vite** - Build tool ultra-rapide
+- **Tailwind CSS** - Framework CSS utility-first
+- **Vue Router** - Routage côté client
+- **PostCSS** - Transformations CSS
+
+## 📁 Structure du Projet
+
+```
+├── src/
+│   ├── components/          # Composants réutilisables
+│   │   ├── Footer.vue
+│   │   ├── NavBar.vue
+│   │   └── ProjectCard.vue
+│   ├── pages/               # Pages principales
+│   │   ├── Home.vue
+│   │   ├── Projects.vue
+│   │   ├── Education.vue
+│   │   └── Contact.vue
+│   ├── router/              # Configuration Vue Router
+│   │   └── index.js
+│   ├── assets/              # Ressources statiques
+│   │   └── styles.css
+│   ├── App.vue              # Composant racine
+│   └── main.js              # Point d'entrée
+├── public/                  # Fichiers publics
+└── index.html               # HTML principal
 ```
 
-Build:
+## 🛠️ Installation
 
-```bash
-npm run build
-```
+1. **Cloner ou télécharger le projet**
+   ```bash
+   cd Portfolio
+   ```
 
-Déployer sur GitHub Pages (simple):
+2. **Installer les dépendances**
+   ```bash
+   npm install
+   ```
 
-1. Mettre le contenu du dossier `dist/` sur la branche `gh-pages` (ou configurer GitHub Actions).
-2. Voir la doc GitHub Pages pour les options d’hébergement.
+3. **Démarrer le serveur de développement**
+   ```bash
+   npm run dev
+   ```
 
-Remarques:
-- Remplacez `public/CV.pdf` par votre CV réel.
-- Complétez la page `Home` et `Contact` avec vos coordonnées exactes et détails LinkedIn.
+4. **Compiler pour la production**
+   ```bash
+   npm run build
+   ```
 
-Vue DevTools
-------------
+## 📋 À Faire
 
-Pour faciliter le développement, installez l'extension Vue Devtools (Chrome ou Firefox) et ouvrez-la lorsque le serveur est en mode développement.
+### Fonctionnalités
+- [ ] Ajouter date et **durée** aux projets/expériences
+- [ ] Ajouter des projets supplémentaires
+- [ ] Ajouter un **filtre par langage/technologie**
+- [ ] Mettre le CV directement en lecture sur le site
+- [ ] Ajouter des éléments personnels (Ambxst x])
 
-- Chrome Web Store: https://chrome.google.com/webstore/search/Vue%20Devtools
-- Firefox Add-ons: https://addons.mozilla.org/en-US/firefox/search/?q=Vue%20Devtools
+### Navigation & Layout
+- [ ] Faire une **bonne navbar**
+- [ ] Mettre la **navbar dans le footer**
+- [ ] Mettre le **footer partout** avec le contact
+- [ ] Que ça **remonte tout en haut** sur chaque page
+- [ ] **Adapter le design sur téléphone** (responsive)
 
-L'application active les DevTools automatiquement en mode développement. Si vous utilisez le projet localement :
+### Contenu
+- [ ] Mettre **dispo pour le stage**
+- [ ] Revoir la **timeline**
 
-```bash
-npm run dev
-```
+### Design & UX
+- [ ] Implémenter un **thème clair et sombre**
+- [ ] **Vérifier les contrastes** de chaque texte
+- [ ] Améliorer l'accessibilité globale
 
-Puis ouvrez les DevTools du navigateur et sélectionnez l'onglet "Vue".
+### Multilangues
+- [ ] Ajouter **version français/anglais**
 
-Si vous préférez ne pas utiliser l'extension, je peux ajouter une configuration Docker ou un raccourci pour exécuter une version empaquetée des DevTools dans un conteneur.
+## 📝 Notes
+
+Ce projet est en développement actif. Les sections ci-dessus seront mises à jour régulièrement.
+
+---
+
+**Dernière mise à jour:** 14 janvier 2026
+
