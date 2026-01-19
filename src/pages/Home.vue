@@ -1,7 +1,10 @@
 <template>
-  <div>
+  <div class="w-full">
+    <!-- Contact Modal -->
+    <Contact :isOpen="contactModalOpen" @close="contactModalOpen = false" />
+
     <!-- Section full-screen d'introduction -->
-    <section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
+    <section class="relative w-full h-screen flex items-center justify-center text-center overflow-hidden">
       <!-- Image de fond -->
       <div
         class="absolute inset-0 bg-cover bg-center transform scale-105 filter blur-sm"
@@ -158,6 +161,9 @@
             <h2 class="text-2xl font-bold mb-4">Travaillons ensemble</h2>
             <p class="text-muted-light mb-6">Je suis ouvert aux opportunités de stage et projets collaboratifs.</p>
             <div class="flex justify-center gap-4 flex-wrap">
+              <button @click="contactModalOpen = true" class="bg-primary text-white px-6 py-3 rounded-lg shadow hover:bg-primary/90 transition">
+                Me contacter
+              </button>
               <a :href="baseUrl + 'CV.pdf'" download="CV.pdf" class="bg-primary text-white px-6 py-3 rounded-lg shadow hover:bg-primary/90 transition">
                 Télécharger mon CV
               </a>
@@ -228,15 +234,20 @@
 <script>
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import Contact from '../pages/Contact.vue'
 import bgImage from '../assets/moon-evening-sky-mountains-forest-silhouette-3840x2160-402.jpg'
 
 
 export default {
+  components: {
+    Contact
+  },
   emits: ['update-scroll'],
   setup(props, { emit }) {
     const bgUrl = ref(bgImage)
     const contentSection = ref(null)
     const router = useRouter()
+    const contactModalOpen = ref(false)
   // Base URL géré par Vite (utile si le site est servi sous /Portfolio/)
   const baseUrl = import.meta.env.BASE_URL || '/'
 
@@ -294,7 +305,7 @@ export default {
       emit('update-scroll', 1)
     })
 
-    return { bgUrl, contentSection, scrollToContent, baseUrl, goToProject }
+    return { bgUrl, contentSection, scrollToContent, baseUrl, goToProject, contactModalOpen }
   }
 }
 </script>

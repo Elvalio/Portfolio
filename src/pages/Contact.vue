@@ -1,23 +1,30 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center py-10">
-    <!-- Overlay -->
-    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"></div>
+  <!-- Overlay -->
+  <Teleport to="body">
+    <Transition name="fade">
+      <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" @click="closeModal" v-if="isOpen"></div>
+    </Transition>
 
-    <!-- Modal -->
-    <div class="relative z-50 w-full max-w-2xl mx-auto px-4">
-      <div class="card rounded-xl border border-gray-700 bg-gray-800/95 shadow-2xl overflow-hidden">
-        <!-- Header -->
+    <!-- Modal Container -->
+    <Transition name="slide-down">
+      <div class="fixed inset-0 flex items-center justify-center z-50 p-4" @click="closeModal" v-if="isOpen">
+        <div class="rounded-xl border border-gray-700 shadow-2xl overflow-hidden w-full max-w-2xl relative" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));" @click.stop>
+        <!-- Fond avec blur -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        
+        <!-- Contenu -->
+        <div class="relative z-10">
         <div class="flex items-center justify-between p-6 md:p-8 border-b border-gray-700">
           <div>
             <h2 class="text-3xl font-bold text-white">Contactez-moi</h2>
             <p class="text-sm text-muted-light mt-1">Je réponds généralement sous 48 heures.</p>
           </div>
           <button
-            @click="$router.go(-1)"
-            class="text-gray-400 hover:text-white transition-colors"
+            @click="closeModal"
+            class="text-gray-300 hover:text-white transition-colors"
             aria-label="Fermer"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -46,31 +53,36 @@
             <textarea v-model="form.message" rows="6" class="mt-1 w-full rounded-lg bg-gray-900 border border-gray-700 px-3 py-2 focus:border-primary focus:ring-primary outline-none" placeholder="Bonjour Harry, ..." required></textarea>
           </label>
 
-          <div class="flex items-center justify-between gap-3 pt-4">
-            <div class="flex items-center gap-3">
-              <button type="submit" class="bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-primary/90 transition disabled:opacity-60" :disabled="status === 'loading'">
-                <span v-if="status === 'loading'">Envoi...</span>
-                <span v-else>Envoyer</span>
-              </button>
+          <div class="flex flex-col gap-3 pt-4">
+            <button type="submit" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition disabled:opacity-60 font-semibold" :disabled="status === 'loading'">
+              <span v-if="status === 'loading'">Envoi...</span>
+              <span v-else>Envoyer</span>
+            </button>
+            <div class="flex items-center gap-3 justify-center">
               <span v-if="status === 'success'" class="text-emerald-400 text-sm">✓ Message envoyé!</span>
               <span v-else-if="status === 'error'" class="text-rose-400 text-sm">{{ feedback }}</span>
             </div>
-            <button type="button" @click="$router.go(-1)" class="text-gray-400 hover:text-gray-300 px-4 py-2 rounded-lg border border-gray-700">
-              Fermer
-            </button>
           </div>
         </form>
+        </div>
       </div>
-    </div>
-  </div>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, defineProps, defineEmits } from 'vue'
 import emailjs from '@emailjs/browser'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
+const props = defineProps({
+  isOpen: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const emit = defineEmits(['close'])
 
 const form = reactive({
   name: '',
@@ -81,6 +93,17 @@ const form = reactive({
 
 const status = ref('idle')
 const feedback = ref('')
+
+const closeModal = () => {
+  emit('close')
+  // Réinitialiser le formulaire
+  form.name = ''
+  form.email = ''
+  form.subject = ''
+  form.message = ''
+  status.value = 'idle'
+  feedback.value = ''
+}
 
 const handleSubmit = () => {
   if (status.value === 'loading') return
@@ -115,7 +138,7 @@ const handleSubmit = () => {
     form.subject = ''
     form.message = ''
     setTimeout(() => {
-      router.go(-1)
+      closeModal()
     }, 2000)
   })
   .catch((err) => {
@@ -125,3 +148,41 @@ const handleSubmit = () => {
   })
 }
 </script>
+
+<style scoped>
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 0.4s ease;
+}
+
+.slide-down-enter-from {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.slide-down-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.slide-down-enter-to,
+.slide-down-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+}
+</style>

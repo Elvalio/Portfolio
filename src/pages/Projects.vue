@@ -1,5 +1,5 @@
 <template>
-  <section class="py-10">
+  <section class="py-10 min-h-[calc(100vh-120px)]">
     <div class="mb-8">
       <h2 class="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Projets</h2>
       <p class="text-muted-light">Sélection de réalisations académiques et personnelles</p>
