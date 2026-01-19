@@ -178,13 +178,16 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import PortfolioImg from '../assets/Portfolio.png'
 import MuseImg from '../assets/MUSE.png'
 import TripImg from '../assets/LPPDT.png'
 
 const activeTab = ref(null)
 const detailSection = ref(null)
+const route = useRoute()
+const router = useRouter()
 
 const projectList = [
   {
@@ -217,13 +220,42 @@ const projectList = [
 ]
 
 function goToDetail(key) {
+  if (!validKeys.has(key)) return
+  // Update the URL query so deep links open the right tab.
+  if (route.query.project !== key) {
+    router.push({ name: 'Projects', query: { ...route.query, project: key } })
+  }
   activeTab.value = key
-  nextTick(() => {
-    if (detailSection.value) {
-      detailSection.value.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  })
+  nextTick(scrollToDetail)
 }
+
+const validKeys = new Set(projectList.map((p) => p.key))
+
+const scrollToDetail = () => {
+  if (detailSection.value) {
+    detailSection.value.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
+
+const hydrateFromQuery = (projectKey) => {
+  if (validKeys.has(projectKey)) {
+    activeTab.value = projectKey
+    nextTick(scrollToDetail)
+  } else {
+    activeTab.value = null
+  }
+}
+
+onMounted(() => {
+  hydrateFromQuery(route.query.project)
+})
+
+watch(
+  () => route.query.project,
+  (projectKey) => {
+    hydrateFromQuery(projectKey)
+  }
+)
 </script>
 
 <style scoped>

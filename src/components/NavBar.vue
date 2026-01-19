@@ -15,6 +15,7 @@
         <router-link to="/" class="text-lg hover:text-primary">Accueil</router-link>
         <router-link to="/projects" class="text-lg hover:text-primary">Projets</router-link>
         <router-link to="/education" class="text-lg hover:text-primary">Formation</router-link>
+        <router-link to="/contact" class="text-lg hover:text-primary">Contact</router-link>
         <a :href="baseUrl + 'CV.pdf'" download="CV.pdf" class="ml-4 inline-block bg-primary text-white px-3 py-1 rounded">Télécharger CV</a>
       </div>
     </div>

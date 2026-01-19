@@ -91,7 +91,13 @@
             <router-link to="/projects" class="text-primary hover:underline">Voir tous les projets →</router-link>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="card p-4 rounded-lg hover:scale-105 transition-transform">
+            <div
+              class="card p-4 rounded-lg hover:scale-105 transition-transform cursor-pointer"
+              role="button"
+              tabindex="0"
+              @click="goToProject('portfolio')"
+              @keyup.enter="goToProject('portfolio')"
+            >
               <h3 class="font-semibold text-xl">Portfolio Personnel</h3>
               <p class="text-sm text-muted-light mt-2">Site développé avec Vue 3, Vite et Tailwind CSS avec des animations modernes.</p>
                 <div class="mt-4 flex gap-2">
@@ -101,7 +107,13 @@
                 </div>
                 </div>
             </div>
-            <div class="card p-4 rounded-lg hover:scale-105 transition-transform">
+            <div
+              class="card p-4 rounded-lg hover:scale-105 transition-transform cursor-pointer"
+              role="button"
+              tabindex="0"
+              @click="goToProject('trip')"
+              @keyup.enter="goToProject('trip')"
+            >
               <h3 class="font-semibold text-xl">TripEnArmor</h3>
               <p class="text-sm text-muted-light mt-2">Site d'avis et de conseils touristiques en France avec front-end et back-end.</p>
               <div class="mt-4 flex gap-2">
@@ -215,6 +227,7 @@
 
 <script>
 import { onMounted, onUnmounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import bgImage from '../assets/moon-evening-sky-mountains-forest-silhouette-3840x2160-402.jpg'
 
 
@@ -223,6 +236,7 @@ export default {
   setup(props, { emit }) {
     const bgUrl = ref(bgImage)
     const contentSection = ref(null)
+    const router = useRouter()
   // Base URL géré par Vite (utile si le site est servi sous /Portfolio/)
   const baseUrl = import.meta.env.BASE_URL || '/'
 
@@ -230,6 +244,10 @@ export default {
       if (contentSection.value) {
         contentSection.value.scrollIntoView({ behavior: 'smooth' })
       }
+    }
+
+    const goToProject = (projectKey) => {
+      router.push({ name: 'Projects', query: { project: projectKey } })
     }
 
     const handleScroll = () => {
@@ -276,7 +294,7 @@ export default {
       emit('update-scroll', 1)
     })
 
-    return { bgUrl, contentSection, scrollToContent, baseUrl }
+    return { bgUrl, contentSection, scrollToContent, baseUrl, goToProject }
   }
 }
 </script>
