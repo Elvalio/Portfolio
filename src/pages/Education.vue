@@ -1,49 +1,29 @@
 <template>
-  <section class="py-8 md:py-12 flex flex-col min-h-[calc(100vh-120px)]">
-    <div class="mb-8 flex-shrink-0 px-8">
-      <h2 class="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Mon Parcours</h2>
-      <p class="text-muted-light text-lg">Une chronologie de ma formation et expériences professionnelles</p>
-    </div>
-    
-    <!-- Horizontal Timeline -->
-    <div ref="timelineContainer" class="relative overflow-x-auto pb-8 scroll-smooth">
-      <div class="min-w-max px-8 relative">
-        <!-- Timeline Line with Arrows -->
-        <div class="absolute top-2 left-8 right-8 h-1 bg-gradient-to-r from-primary/20 via-primary to-primary" style="width: calc(100% - 4rem);">
-          <!-- Arrow 1 -->
-          <div class="absolute top-1/2 transform -translate-y-1/2" style="left: 25%;">
-            <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-            </svg>
-          </div>
-          
-          <!-- Arrow 2 -->
-          <div class="absolute top-1/2 transform -translate-y-1/2" style="left: 50%;">
-            <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-            </svg>
-          </div>
-          
-          <!-- Arrow 3 -->
-          <div class="absolute top-1/2 transform -translate-y-1/2" style="left: 75%;">
-            <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-            </svg>
-          </div>
-        </div>
+  <section class="py-12 md:py-16 px-4 md:px-8 min-h-screen">
+    <div class="max-w-4xl mx-auto">
+      <!-- Header -->
+      <div class="mb-12 text-center">
+        <h2 class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-purple-400 to-primary bg-clip-text text-transparent">Mon Parcours</h2>
+        <p class="text-muted-light text-lg">Une chronologie de ma formation et expériences professionnelles</p>
+      </div>
+      
+      <!-- Vertical Timeline -->
+      <div class="relative">
+        <!-- Central Timeline Line -->
+        <div class="timeline-line"></div>
 
-        <!-- Timeline Items Container - Horizontal Layout -->
-        <div class="flex gap-12 relative pt-8 pb-8">
+        <!-- Timeline Items Container - Vertical Layout -->
+        <div class="space-y-12 relative">
           
-          <!-- Item 1: Stage Observation (Oldest - 2022) -->
-          <div class="timeline-item group w-96 flex-shrink-0">
-            <!-- Connection Line to Dot -->
-            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-gradient-to-b from-purple-400/30 to-purple-400"></div>
-            
+          <!-- Item 1: Stage Observation (Left) -->
+          <div class="timeline-item timeline-left">
             <!-- Timeline Dot -->
-            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-purple-500 rounded-full border-4 border-gray-900 shadow-lg shadow-purple-500/50"></div>
+            <div class="timeline-marker">
+              <div class="marker-dot"></div>
+            </div>
 
-            <div class="timeline-card" style="border-color: rgba(168, 85, 247, 0.3)">
+            <!-- Card -->
+            <div class="timeline-card group w-full md:w-96">
               <!-- Header with Icon and Badge -->
               <div class="flex items-start gap-4 mb-4">
                 <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-500/10 flex items-center justify-center flex-shrink-0">
@@ -86,15 +66,15 @@
             </div>
           </div>
 
-          <!-- Item 2: Baccalauréat (2020-2023) -->
-          <div class="timeline-item group w-96 flex-shrink-0">
-            <!-- Connection Line to Dot -->
-            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-gradient-to-b from-amber-400/30 to-amber-400"></div>
-            
+          <!-- Item 2: Baccalauréat (Right) -->
+          <div class="timeline-item timeline-right">
             <!-- Timeline Dot -->
-            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-amber-400 rounded-full border-4 border-gray-900 shadow-lg shadow-amber-400/50"></div>
+            <div class="timeline-marker">
+              <div class="marker-dot"></div>
+            </div>
 
-            <div class="timeline-card">
+            <!-- Card -->
+            <div class="timeline-card group w-full md:w-96">
               <!-- Header with Icon and Badge -->
               <div class="flex items-start gap-4 mb-4">
                 <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-500/10 flex items-center justify-center flex-shrink-0">
@@ -113,15 +93,15 @@
             </div>
           </div>
 
-          <!-- Item 3: Bachelor (Sept 2023 - Aujourd'hui) -->
-          <div class="timeline-item group w-96 flex-shrink-0">
-            <!-- Connection Line to Dot -->
-            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-gradient-to-b from-primary/30 to-primary"></div>
-            
+          <!-- Item 3: Bachelor (Left) -->
+          <div class="timeline-item timeline-left">
             <!-- Timeline Dot -->
-            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-primary rounded-full border-4 border-gray-900 shadow-lg shadow-primary/50"></div>
+            <div class="timeline-marker">
+              <div class="marker-dot active"></div>
+            </div>
 
-            <div class="timeline-card active">
+            <!-- Card -->
+            <div class="timeline-card active group w-full md:w-96">
               <!-- Header with Icon and Badge -->
               <div class="flex items-start gap-4 mb-4">
                 <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center flex-shrink-0">
@@ -140,15 +120,15 @@
             </div>
           </div>
 
-          <!-- Item 4: Stage Unissia (Most Recent - 2025) -->
-          <div class="timeline-item group w-96 flex-shrink-0">
-            <!-- Connection Line to Dot -->
-            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-gradient-to-b from-blue-400/30 to-blue-400"></div>
-            
+          <!-- Item 4: Stage Unissia (Right) -->
+          <div class="timeline-item timeline-right">
             <!-- Timeline Dot -->
-            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-blue-500 rounded-full border-4 border-gray-900 shadow-lg shadow-blue-500/50"></div>
+            <div class="timeline-marker">
+              <div class="marker-dot highlight"></div>
+            </div>
 
-            <div class="timeline-card highlight">
+            <!-- Card -->
+            <div class="timeline-card highlight group w-full md:w-96">
               <!-- Header with Icon and Badge -->
               <div class="flex items-start gap-4 mb-4">
                 <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center flex-shrink-0">
@@ -192,7 +172,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -200,88 +179,141 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-
-const timelineContainer = ref(null);
-
-onMounted(() => {
-  // Scroll to the right (most recent events) on mount
-  if (timelineContainer.value) {
-    timelineContainer.value.scrollLeft = timelineContainer.value.scrollWidth;
-  }
-  
-  // Add wheel event listener to window for the entire page
-  window.addEventListener('wheel', handleWheel, { passive: false });
-});
-
-onUnmounted(() => {
-  window.removeEventListener('wheel', handleWheel);
-});
-
-const handleWheel = (e) => {
-  // Always convert vertical scroll to horizontal scroll on this page
-  if (timelineContainer.value) {
-    e.preventDefault();
-    timelineContainer.value.scrollLeft += e.deltaY;
-  }
-};
+// No wheel event handling - normal scroll behavior
 </script>
 
 <style scoped>
-/* Timeline Items Animation */
-.timeline-item {
-  opacity: 0;
-  animation: slideInUp 0.7s ease-out forwards;
+/* Timeline Line */
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  margin-left: -2px;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0), rgba(99, 102, 241, 1), rgba(99, 102, 241, 0));
 }
 
-.timeline-item:nth-child(4) {
+/* Timeline Layout */
+.timeline-item {
+  opacity: 0;
+  animation: fadeInScale 0.7s ease-out forwards;
+  display: flex;
+  position: relative;
+  gap: 2rem;
+}
+
+.timeline-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.timeline-item:nth-child(2) {
   animation-delay: 0.2s;
 }
 
-.timeline-item:nth-child(6) {
+.timeline-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.timeline-item:nth-child(4) {
   animation-delay: 0.4s;
 }
 
-.timeline-item:nth-child(8) {
-  animation-delay: 0.6s;
-}
-
-.timeline-item:nth-child(10) {
-  animation-delay: 0.8s;
-}
-
-@keyframes slideInUp {
+@keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
   }
+}
+
+/* Alternating Left-Right Layout */
+.timeline-left {
+  justify-content: flex-end;
+}
+
+.timeline-left .timeline-card {
+  text-align: right;
+}
+
+.timeline-right {
+  justify-content: flex-start;
+}
+
+.timeline-right .timeline-card {
+  text-align: left;
+}
+
+/* Timeline Marker (Dot on the timeline) */
+.timeline-marker {
+  position: absolute;
+  left: 50%;
+  top: 2rem;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 0;
+}
+
+.marker-dot {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(99, 102, 241, 0.8));
+  border: 3px solid rgba(17, 24, 39, 1);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.3), inset 0 0 10px rgba(99, 102, 241, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.marker-dot:hover {
+  width: 24px;
+  height: 24px;
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.6), inset 0 0 15px rgba(99, 102, 241, 0.3);
+  margin-top: -4px;
+  margin-left: -4px;
+}
+
+.marker-dot.active {
+  background: linear-gradient(135deg, var(--primary), rgba(99, 102, 241, 1));
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.8), inset 0 0 15px rgba(99, 102, 241, 0.4);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.marker-dot.highlight {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(59, 130, 246, 0.8));
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.3), inset 0 0 10px rgba(59, 130, 246, 0.2);
+}
+
+.marker-dot.highlight:hover {
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.6), inset 0 0 15px rgba(59, 130, 246, 0.3);
 }
 
 /* Timeline Cards */
 .timeline-card {
   position: relative;
   padding: 28px;
-  background: linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(17, 24, 39, 0.5) 100%);
-  border: 1px solid rgba(107, 114, 128, 0.3);
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(17, 24, 39, 0.4) 100%);
+  border: 1px solid rgba(107, 114, 128, 0.2);
   border-radius: 12px;
   backdrop-filter: blur(10px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+/* Gradient top border effect */
 .timeline-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: linear-gradient(90deg, transparent, var(--color-primary, #6366f1), transparent);
   opacity: 0;
   transition: opacity 0.4s ease;
@@ -291,31 +323,35 @@ const handleWheel = (e) => {
   opacity: 1;
 }
 
+/* Hover Effects */
 .timeline-card:hover {
-  border-color: rgba(99, 102, 241, 0.5);
-  background: linear-gradient(135deg, rgba(17, 24, 39, 0.9) 0%, rgba(17, 24, 39, 0.6) 100%);
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.4);
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(17, 24, 39, 0.5) 100%);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(99, 102, 241, 0.15), 0 0 40px rgba(99, 102, 241, 0.1);
 }
 
 .timeline-card.active {
-  border-color: rgba(99, 102, 241, 0.6);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(17, 24, 39, 0.7) 100%);
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.5);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(17, 24, 39, 0.6) 100%);
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .timeline-card.active:hover {
-  box-shadow: 0 20px 50px rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.7);
+  box-shadow: 0 20px 50px rgba(99, 102, 241, 0.25), 0 0 40px rgba(99, 102, 241, 0.15);
+  transform: translateY(-8px);
 }
 
 .timeline-card.highlight {
-  border-color: rgba(59, 130, 246, 0.4);
+  border-color: rgba(59, 130, 246, 0.3);
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(17, 24, 39, 0.6) 100%);
 }
 
 .timeline-card.highlight:hover {
   border-color: rgba(59, 130, 246, 0.6);
-  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 20px 50px rgba(59, 130, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.08);
+  transform: translateY(-6px);
 }
 
 /* Badge Styling */
@@ -324,14 +360,15 @@ const handleWheel = (e) => {
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background: rgba(107, 114, 128, 0.3);
+  background: rgba(107, 114, 128, 0.2);
   color: rgb(156, 163, 175);
   font-size: 0.75rem;
   font-weight: 600;
   border-radius: 999px;
-  border: 1px solid rgba(107, 114, 128, 0.4);
+  border: 1px solid rgba(107, 114, 128, 0.3);
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
+  width: fit-content;
 }
 
 .badge.active {
@@ -368,7 +405,7 @@ const handleWheel = (e) => {
 
 /* Skill Items */
 .skill-item {
-  padding: 8px;
+  padding: 12px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   transition: all 0.3s ease;
@@ -376,9 +413,9 @@ const handleWheel = (e) => {
 }
 
 .skill-item:hover {
-  background: rgba(99, 102, 241, 0.05);
+  background: rgba(99, 102, 241, 0.08);
   border-color: rgba(99, 102, 241, 0.2);
-  transform: translateX(2px);
+  transform: translateX(-2px);
 }
 
 /* Pulse Animation */
@@ -391,39 +428,67 @@ const handleWheel = (e) => {
   }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  height: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(17, 24, 39, 0.5);
-  border-radius: 10px;
-  margin: 0 20px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, rgb(99, 102, 241), rgb(139, 92, 246));
-  border-radius: 10px;
-  border: 2px solid rgba(17, 24, 39, 0.5);
-  transition: all 0.3s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, rgb(129, 140, 248), rgb(167, 139, 250));
-  border-color: rgba(17, 24, 39, 0.7);
-}
-
-/* Firefox Scrollbar */
-.overflow-x-auto {
-  scrollbar-width: thin;
-  scrollbar-color: rgb(99, 102, 241) rgba(17, 24, 39, 0.5);
-}
-
-/* Responsive Mobile */
+/* Mobile Responsive */
 @media (max-width: 768px) {
+  .timeline-item {
+    flex-direction: column;
+    justify-content: flex-start !important;
+    gap: 1rem;
+  }
+
+  .timeline-left,
+  .timeline-right {
+    justify-content: flex-start;
+  }
+
+  .timeline-left .timeline-card,
+  .timeline-right .timeline-card {
+    text-align: left !important;
+  }
+
+  .timeline-marker {
+    position: static;
+    transform: none;
+    width: auto;
+    margin-bottom: -1.5rem;
+    z-index: 0;
+  }
+
+  .marker-dot {
+    width: 12px;
+    height: 12px;
+  }
+
+  .marker-dot:hover {
+    width: 16px;
+    height: 16px;
+  }
+
   .timeline-card {
-    padding: 16px;
+    padding: 20px;
+    width: 100% !important;
+  }
+
+  /* Hide the central timeline line on mobile */
+  .timeline-line {
+    display: none;
+  }
+}
+
+/* Desktop responsive container */
+@media (min-width: 768px) {
+  .timeline-item {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .timeline-left {
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+  }
+
+  .timeline-card {
+    width: calc(50% - 1rem);
   }
 }
 </style>
