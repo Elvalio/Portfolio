@@ -1,93 +1,51 @@
-# 🎨 Portfolio Personnel
+# Portfolio
 
-Un portfolio moderne et interactif créé avec **Vue.js** et **Vite**, présentant mes projets, mon parcours éducatif et mes compétences.
+Site personnel présentant mon parcours, mes compétences et mes projets. Développé en Vue 3 avec Vite et Tailwind CSS, déployé automatiquement sur GitHub Pages.
 
-## 🚀 Technologies
+**En ligne :** https://elvalio.github.io/Portfolio/
 
-- **Vue.js** - Framework JavaScript progressif
-- **Vite** - Build tool ultra-rapide
-- **Tailwind CSS** - Framework CSS utility-first
-- **Vue Router** - Routage côté client
-- **PostCSS** - Transformations CSS
+## Contenu
 
-## 📁 Structure du Projet
+- **Accueil** — présentation et compétences techniques
+- **Projets** — fiches détaillées des réalisations, avec les technologies associées
+- **Parcours** — formation et expériences, sous forme de timeline
 
-```
-├── src/
-│   ├── components/          # Composants réutilisables
-│   │   ├── Footer.vue
-│   │   ├── NavBar.vue
-│   │   └── ProjectCard.vue
-│   ├── pages/               # Pages principales
-│   │   ├── Home.vue
-│   │   ├── Projects.vue
-│   │   ├── Education.vue
-│   │   └── Contact.vue
-│   ├── router/              # Configuration Vue Router
-│   │   └── index.js
-│   ├── assets/              # Ressources statiques
-│   │   └── styles.css
-│   ├── App.vue              # Composant racine
-│   └── main.js              # Point d'entrée
-├── public/                  # Fichiers publics
-└── index.html               # HTML principal
+## Stack
+
+| | |
+|---|---|
+| Framework | Vue 3 |
+| Build | Vite 5 |
+| Styles | Tailwind CSS, PostCSS |
+| Routage | Vue Router 4 |
+| Formulaire de contact | EmailJS |
+
+## Installation
+
+```bash
+npm install
+npm run dev
 ```
 
-## 🛠️ Installation
+Autres commandes :
 
-1. **Cloner ou télécharger le projet**
-   ```bash
-   cd Portfolio
-   ```
+```bash
+npm run build     # build de production dans dist/
+npm run preview   # prévisualisation du build
+```
 
-2. **Installer les dépendances**
-   ```bash
-   npm install
-   ```
+## Déploiement
 
-3. **Démarrer le serveur de développement**
-   ```bash
-   npm run dev
-   ```
+Chaque push sur `main` déclenche le workflow `.github/workflows/deploy.yml` : build Vite puis publication du dossier `dist/` sur la branche `gh-pages`.
 
-4. **Compiler pour la production**
-   ```bash
-   npm run build
-   ```
+Le site étant servi depuis un sous-chemin, la base est fixée à `/Portfolio/` dans `vite.config.js` et dans l'historique du routeur. À changer en cas de déploiement sur un domaine propre.
 
-## 📋 À Faire
+## Structure
 
-### Fonctionnalités
-- [ ] Ajouter date et **durée** aux projets/expériences
-- [ ] Ajouter des projets supplémentaires
-- [ ] Ajouter un **filtre par langage/technologie**
-- [ ] Mettre le CV directement en lecture sur le site
-- [ ] Ajouter des éléments personnels (Ambxst x])
-
-### Navigation & Layout
-- [ ] Faire une **bonne navbar**
-- [ ] Mettre la **navbar dans le footer**
-- [ ] Mettre le **footer partout** avec le contact
-- [ ] Que ça **remonte tout en haut** sur chaque page
-- [ ] **Adapter le design sur téléphone** (responsive)
-
-### Contenu
-- [ ] Mettre **dispo pour le stage**
-- [ ] Revoir la **timeline**
-
-### Design & UX
-- [ ] Implémenter un **thème clair et sombre**
-- [ ] **Vérifier les contrastes** de chaque texte
-- [ ] Améliorer l'accessibilité globale
-
-### Multilangues
-- [ ] Ajouter **version français/anglais**
-
-## 📝 Notes
-
-Ce projet est en développement actif. Les sections ci-dessus seront mises à jour régulièrement.
-
----
-
-**Dernière mise à jour:** 14 janvier 2026
-
+```
+src/
+  components/   NavBar, Footer, ProjectCard
+  pages/        Home, Projects, Education, Contact
+  router/       définition des routes
+  assets/       styles, images et logos des technologies
+```
