@@ -76,7 +76,7 @@ export const besideCode = [
   { fr: 'Auto-hébergement, homelab', en: 'Self-hosting, homelab' }
 ]
 
-// Statistiques d'écoute ListenBrainz : JSON public régénéré toutes les 6 h par
+// Statistiques d'écoute ListenBrainz : JSON public régénéré toutes les 30 min par
 // une GitHub Action du dépôt Elvalio/Elvalio (lu côté navigateur, sans clé).
 export const music = {
   source: 'https://raw.githubusercontent.com/Elvalio/Elvalio/main/assets/music.json',

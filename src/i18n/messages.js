@@ -37,7 +37,7 @@ export const messages = {
     'home.skills': 'Compétences',
     'home.beside': 'À côté du code',
     'home.music': 'Musique',
-    'home.musicIntro': 'Mes écoutes, suivies avec ListenBrainz et mises à jour toutes les 6 heures.',
+    'home.musicIntro': 'Mes écoutes, suivies avec ListenBrainz et mises à jour toutes les 30 minutes.',
 
     // Projets
     'projects.title': 'Projets',
@@ -163,7 +163,7 @@ export const messages = {
     'home.skills': 'Skills',
     'home.beside': 'Beyond the code',
     'home.music': 'Music',
-    'home.musicIntro': 'What I listen to, tracked with ListenBrainz and updated every 6 hours.',
+    'home.musicIntro': 'What I listen to, tracked with ListenBrainz and updated every 30 minutes.',
 
     'projects.title': 'Projects',
     'projects.cmd': 'ls -la ~/projects',
