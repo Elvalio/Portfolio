@@ -13,7 +13,7 @@
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
         
         <!-- Contenu -->
-        <div class="relative z-10">
+        <div class="relative z-10 max-h-[calc(100dvh-2rem)] overflow-y-auto">
         <div class="flex items-center justify-between p-6 md:p-8 border-b border-gray-700">
           <div>
             <h2 class="text-3xl font-bold text-white">Contactez-moi</h2>
