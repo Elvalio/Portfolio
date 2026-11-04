@@ -4,10 +4,15 @@
     <div class="border-2 border-lilac bg-ink-deep shadow-dur-8 shadow-primary">
       <!-- Barre de titre -->
       <div class="flex items-center gap-3 border-b-2 border-lilac bg-primary-dark px-4 py-2.5 font-mono text-[13px] text-lilac">
-        <span class="h-2.5 w-2.5 flex-none border border-lilac bg-primary" aria-hidden="true"></span>
-        <span class="h-2.5 w-2.5 flex-none border border-lilac bg-muted-light" aria-hidden="true"></span>
-        <span class="h-2.5 w-2.5 flex-none border border-lilac bg-bg-light" aria-hidden="true"></span>
-        <span class="mx-auto truncate pr-[54px]">harry@elvalio: tmux attach -t music</span>
+        <!-- Une case par fenêtre tmux, la fenêtre active est pleine -->
+        <span
+          v-for="win in windows"
+          :key="win.name"
+          class="h-2.5 w-2.5 flex-none border border-lilac"
+          :class="win.index === activeWindow ? 'bg-lilac' : 'bg-transparent'"
+          aria-hidden="true"
+        ></span>
+        <span class="mx-auto truncate pr-[66px]">harry@elvalio: tmux attach -t music</span>
       </div>
 
       <!-- Chargement -->
@@ -106,7 +111,13 @@
       <div class="flex items-stretch justify-between gap-3 border-t-2 border-line bg-ink font-mono text-[13px]">
         <div class="flex min-w-0 items-stretch">
           <span class="flex items-center bg-lilac px-4 py-1.5 font-bold text-primary-dark">music</span>
-          <span class="hidden items-center truncate px-4 text-muted-light sm:flex" aria-hidden="true">0:tracks* 1:artists 2:activity</span>
+          <span class="flex min-w-0 items-center gap-2.5 truncate px-3 sm:gap-3 sm:px-4" aria-hidden="true">
+            <span
+              v-for="win in windows"
+              :key="win.name"
+              :class="win.index === activeWindow ? 'font-bold text-lilac' : 'text-muted-light'"
+            >{{ win.index }}<span :class="win.index === activeWindow ? '' : 'hidden sm:inline'">:{{ win.name }}</span>{{ win.index === activeWindow ? '*' : '' }}</span>
+          </span>
         </div>
         <span v-if="updated" class="flex items-center px-4 text-muted"><span class="sr-only">mis à jour à </span>{{ updated.time }}</span>
       </div>
@@ -159,17 +170,27 @@ const trackPanes = computed(() => [
     flag: '--all-time',
     items: list(raw.value?.top_tracks_all_time).slice(0, 5).map(toTrack),
     empty: "(aucune écoute pour l'instant)",
-    // Panneau actif de tmux : bordures lilas
-    border: 'border-b-2 border-lilac md:border-r-2'
+    // Sa bordure droite (bureau) et basse (mobile) touche le panneau actif : lilas
+    border: 'border-b-2 border-b-lilac md:border-b-line md:border-r-2 md:border-r-lilac'
   },
   {
     id: 'semaine',
     flag: '--week',
     items: list(raw.value?.top_tracks_week).slice(0, 5).map(toTrack),
     empty: '(aucune écoute cette semaine)',
-    border: 'border-b-2 border-line'
+    // Panneau actif de tmux : bordures lilas
+    border: 'border-b-2 border-b-lilac'
   }
 ])
+
+// Fenêtres tmux, une par panneau ; la fenêtre active est celle de la semaine
+const windows = [
+  { index: 0, name: 'all-time' },
+  { index: 1, name: 'week' },
+  { index: 2, name: 'artists' },
+  { index: 3, name: 'activity' }
+]
+const activeWindow = 1
 
 const artists = computed(() => {
   const items = list(raw.value?.top_artists_all_time).slice(0, 5)

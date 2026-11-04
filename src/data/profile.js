@@ -18,7 +18,7 @@ export const web3formsAccessKey = 'd3b5ed0d-67e8-42b5-b326-19f72a349f2b'
 export const whoami = {
   title: 'Développeur fullstack, formé aux données.',
   text: "Je développe des applications web de bout en bout, de la base de données à l'interface. Après un BUT Informatique à Lannion et deux stages de développeur fullstack, je poursuis en Master ILSEN à Avignon.",
-  extra: "Curieux de nature, je bricole aussi en dehors des cours : homelab auto-hébergé, Stream Deck, et tout ce qui peut s'automatiser sous Linux."
+  extra: 'Ma curiosité ne s’arrête pas au code des cours : homelab auto-hébergé, Stream Deck, Linux configuré au moindre raccourci.'
 }
 
 // Statistiques d'écoute ListenBrainz : JSON public régénéré toutes les 6 h par
