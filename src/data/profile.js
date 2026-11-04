@@ -24,7 +24,8 @@ export const whoami = {
 // Fiche « profil.yml » de l'accueil (clé → valeur)
 export const profileYml = [
   { key: 'statut', value: 'M1 ILSEN · Avignon Université' },
-  { key: 'recherche', value: 'alternance dev · janv. 2027' },
+  { key: 'recherche', value: 'alternance dev · mi-janv. 2027' },
+  { key: 'secteur', value: 'Rennes · Bruz' },
   { key: 'basé', value: 'Bretagne · Avignon' },
   { key: 'stages', value: '[Unissia, Jikigai]' }
 ]
@@ -33,10 +34,11 @@ export const profileYml = [
 export const search = {
   open: true,
   command: 'git checkout -b alternance',
-  headline: 'Je cherche une alternance en développement, dès janvier 2027.',
+  // Trait d'union insécable (U+2011) : « mi‑janvier » ne se coupe pas en fin de ligne
+  headline: 'Je cherche une alternance en développement à Rennes ou Bruz, dès mi‑janvier 2027.',
   text: 'Pour mener mon master en entreprise. Je réponds généralement sous 48 heures.',
-  ticker: 'dès janvier 2027',
-  nextStep: 'alternance en développement, à partir de janvier 2027'
+  ticker: 'dès mi-janvier 2027 · Rennes / Bruz',
+  nextStep: 'alternance en développement à Rennes ou Bruz, à partir de mi-janvier 2027'
 }
 
 // Fichier « stack.json » de l'accueil
