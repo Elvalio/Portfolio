@@ -18,14 +18,14 @@
       <!-- Chargement -->
       <div v-if="state === 'loading'" class="min-h-[300px] p-6 font-mono text-sm" role="status">
         <p class="text-muted"><span class="text-accent-text">$</span> curl -s music.json</p>
-        <p class="mt-2 flex items-center gap-2 text-muted-light">chargement des écoutes… <span class="curseur inline-block h-4 w-2 bg-accent-text" aria-hidden="true"></span></p>
+        <p class="mt-2 flex items-center gap-2 text-muted-light">{{ t('music.loading') }} <span class="curseur inline-block h-4 w-2 bg-accent-text" aria-hidden="true"></span></p>
       </div>
 
       <!-- Erreur réseau : message discret, le reste de la page continue -->
       <div v-else-if="state === 'error'" class="p-6 font-mono text-sm" role="status">
         <p class="text-muted"><span class="text-accent-text">$</span> curl -s music.json</p>
-        <p class="mt-2 text-lilac">[err] statistiques indisponibles pour le moment</p>
-        <p class="mt-1 text-muted-light">Le détail reste visible sur <a :href="music.profile" target="_blank" rel="noopener noreferrer">mon profil ListenBrainz ↗</a></p>
+        <p class="mt-2 text-lilac">{{ t('music.error') }}</p>
+        <p class="mt-1 text-muted-light">{{ t('music.errorHint') }} <a :href="music.profile" target="_blank" rel="noopener noreferrer">{{ t('music.errorLink') }}</a></p>
       </div>
 
       <!-- Statistiques -->
@@ -36,14 +36,14 @@
             <span class="text-accent-text" aria-hidden="true">❯</span> <span class="font-bold text-lilac">top tracks</span> <span class="text-muted">{{ pane.flag }}</span>
           </h3>
           <ol v-if="pane.items.length" class="mt-3 flex flex-col font-mono text-[13px] sm:text-sm">
-            <li v-for="(t, i) in pane.items" :key="i" class="grid grid-cols-[1.75rem_minmax(0,1.3fr)_minmax(0,1fr)_2.25rem] items-baseline gap-x-3 py-1.5">
+            <li v-for="(track, i) in pane.items" :key="i" class="grid grid-cols-[1.75rem_minmax(0,1.3fr)_minmax(0,1fr)_2.25rem] items-baseline gap-x-3 py-1.5">
               <span class="text-accent-text">{{ rank(i) }}</span>
-              <span class="truncate font-bold text-bg-light" :title="t.track">{{ t.track }}</span>
-              <span class="truncate text-muted-light" :title="t.artist"><span class="sr-only">par </span>{{ t.artist }}</span>
-              <span class="text-right tabular-nums text-muted">{{ t.plays }}<span class="sr-only"> écoutes</span></span>
+              <span class="truncate font-bold text-bg-light" :title="track.track">{{ track.track }}</span>
+              <span class="truncate text-muted-light" :title="track.artist"><span class="sr-only">{{ t('music.by') }}</span>{{ track.artist }}</span>
+              <span class="text-right tabular-nums text-muted">{{ track.plays }}<span class="sr-only">{{ t('music.plays') }}</span></span>
             </li>
           </ol>
-          <p v-else class="mt-3 font-mono text-sm text-muted">{{ pane.empty }}</p>
+          <p v-else class="mt-3 font-mono text-sm text-muted">{{ t(pane.empty) }}</p>
         </section>
 
         <!-- Artistes, avec barres de proportion -->
@@ -62,10 +62,10 @@
               <span class="h-2.5 bg-primary-dark" aria-hidden="true">
                 <span class="block h-full" :style="{ width: `${a.share}%`, backgroundColor: barTones[i % barTones.length] }"></span>
               </span>
-              <span class="text-right tabular-nums text-muted">{{ a.plays }}<span class="sr-only"> écoutes</span></span>
+              <span class="text-right tabular-nums text-muted">{{ a.plays }}<span class="sr-only">{{ t('music.plays') }}</span></span>
             </li>
           </ol>
-          <p v-else class="mt-3 font-mono text-sm text-muted">(aucun artiste pour l'instant)</p>
+          <p v-else class="mt-3 font-mono text-sm text-muted">{{ t('music.emptyArtists') }}</p>
         </section>
 
         <!-- Activité : heatmap jour × heure + compteurs -->
@@ -83,7 +83,7 @@
                   :key="h"
                   class="aspect-square"
                   :style="{ backgroundColor: heatTones[heat.level(v)] }"
-                  :title="`${heat.days[d].name} ${h} h : ${v} écoute${v > 1 ? 's' : ''}`"
+                  :title="t('music.cell', { day: heat.days[d].name, hour: h, count: v })"
                 ></span>
               </template>
             </div>
@@ -92,17 +92,17 @@
               <span v-for="h in [0, 6, 12, 18]" :key="h" class="col-span-6">{{ h }}h</span>
             </div>
             <div class="mt-2 flex items-center justify-end gap-1 font-mono text-[11px] text-muted">
-              moins
+              {{ t('music.less') }}
               <span v-for="(tone, l) in heatTones" :key="l" class="h-2.5 w-2.5" :style="{ backgroundColor: tone }"></span>
-              plus
+              {{ t('music.more') }}
             </div>
           </div>
-          <p v-else class="mt-3 font-mono text-sm text-muted">(pas encore de données d'activité)</p>
+          <p v-else class="mt-3 font-mono text-sm text-muted">{{ t('music.emptyHeat') }}</p>
 
           <dl class="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-mono text-sm">
-            <div class="flex items-baseline gap-1.5"><dt class="order-2 text-muted-light">écoutes</dt><dd class="order-1 font-bold text-lilac">{{ format(totals.listens) }}</dd></div>
-            <div class="flex items-baseline gap-1.5"><dt class="order-2 text-muted-light">d'écoute</dt><dd class="order-1 font-bold text-accent-text">{{ totals.estimated ? '~' : '' }}{{ format(totals.hours) }} h</dd></div>
-            <div class="flex items-baseline gap-1.5"><dt class="order-2 text-muted-light">cette semaine</dt><dd class="order-1 font-bold text-bg-light">{{ format(totals.week) }}</dd></div>
+            <div class="flex items-baseline gap-1.5"><dt class="order-2 text-muted-light">{{ t('music.listens') }}</dt><dd class="order-1 font-bold text-lilac">{{ format(totals.listens) }}</dd></div>
+            <div class="flex items-baseline gap-1.5"><dt class="order-2 text-muted-light">{{ t('music.hours') }}</dt><dd class="order-1 font-bold text-accent-text">{{ totals.estimated ? '~' : '' }}{{ format(totals.hours) }} h</dd></div>
+            <div class="flex items-baseline gap-1.5"><dt class="order-2 text-muted-light">{{ t('music.week') }}</dt><dd class="order-1 font-bold text-bg-light">{{ format(totals.week) }}</dd></div>
           </dl>
         </section>
       </div>
@@ -119,17 +119,17 @@
             >{{ win.index }}<span :class="win.index === activeWindow ? '' : 'hidden sm:inline'">:{{ win.name }}</span>{{ win.index === activeWindow ? '*' : '' }}</span>
           </span>
         </div>
-        <span v-if="updated" class="flex items-center px-4 text-muted"><span class="sr-only">mis à jour à </span>{{ updated.time }}</span>
+        <span v-if="updated" class="flex items-center px-4 text-muted"><span class="sr-only">{{ t('music.updatedAt') }}</span>{{ updated.time }}</span>
       </div>
     </div>
 
     <!-- Dernière écoute, mise à jour, lien vers le profil -->
     <p class="mt-5 flex flex-col gap-1 font-mono text-xs text-muted sm:flex-row sm:flex-wrap sm:gap-x-3">
       <span v-if="lastPlayed" class="min-w-0 max-w-full truncate">
-        <span class="text-accent-text" aria-hidden="true">▸</span> dernière écoute : <span class="text-muted-light">{{ lastPlayed.track }} — {{ lastPlayed.artist }}</span>
+        <span class="text-accent-text" aria-hidden="true">▸</span> {{ t('music.lastPlayed') }} <span class="text-muted-light">{{ lastPlayed.track }} — {{ lastPlayed.artist }}</span>
       </span>
-      <span v-if="updated"><span v-if="lastPlayed" class="mr-3 hidden sm:inline" aria-hidden="true">·</span>mis à jour le {{ updated.date }}</span>
-      <span><span v-if="lastPlayed || updated" class="mr-3 hidden sm:inline" aria-hidden="true">·</span><a :href="music.profile" target="_blank" rel="noopener noreferrer">voir mon profil ListenBrainz ↗</a></span>
+      <span v-if="updated"><span v-if="lastPlayed" class="mr-3 hidden sm:inline" aria-hidden="true">·</span>{{ t('music.updatedOn', { date: updated.date }) }}</span>
+      <span><span v-if="lastPlayed || updated" class="mr-3 hidden sm:inline" aria-hidden="true">·</span><a :href="music.profile" target="_blank" rel="noopener noreferrer">{{ t('music.profile') }}</a></span>
     </p>
   </div>
 </template>
@@ -137,6 +137,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { music } from '../data/profile.js'
+import { t, locale, intlLocale } from '../i18n'
 
 // Barres des artistes : du lilas au violet de la palette
 const barTones = ['#CDBBF8', '#B79FF4', '#A98BF0', '#8E6CEB', '#6D3BD9']
@@ -144,21 +145,31 @@ const barTones = ['#CDBBF8', '#B79FF4', '#A98BF0', '#8E6CEB', '#6D3BD9']
 const heatTones = ['#22213D', '#3D3B5E', '#5A3FB0', '#7C55E6', '#CDBBF8']
 
 const DAYS = {
-  mon: { letter: 'L', name: 'lundi' },
-  tue: { letter: 'M', name: 'mardi' },
-  wed: { letter: 'M', name: 'mercredi' },
-  thu: { letter: 'J', name: 'jeudi' },
-  fri: { letter: 'V', name: 'vendredi' },
-  sat: { letter: 'S', name: 'samedi' },
-  sun: { letter: 'D', name: 'dimanche' }
+  fr: {
+    mon: { letter: 'L', name: 'lundi' },
+    tue: { letter: 'M', name: 'mardi' },
+    wed: { letter: 'M', name: 'mercredi' },
+    thu: { letter: 'J', name: 'jeudi' },
+    fri: { letter: 'V', name: 'vendredi' },
+    sat: { letter: 'S', name: 'samedi' },
+    sun: { letter: 'D', name: 'dimanche' }
+  },
+  en: {
+    mon: { letter: 'M', name: 'Monday' },
+    tue: { letter: 'T', name: 'Tuesday' },
+    wed: { letter: 'W', name: 'Wednesday' },
+    thu: { letter: 'T', name: 'Thursday' },
+    fri: { letter: 'F', name: 'Friday' },
+    sat: { letter: 'S', name: 'Saturday' },
+    sun: { letter: 'S', name: 'Sunday' }
+  }
 }
 
 const state = ref('loading') // loading | ready | error
 const raw = ref(null)
 let controller = null
 
-const numberFormat = new Intl.NumberFormat('fr-FR')
-const format = (n) => numberFormat.format(Number(n) || 0)
+const format = (n) => new Intl.NumberFormat(intlLocale.value).format(Number(n) || 0)
 const rank = (i) => String(i + 1).padStart(2, '0')
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -169,7 +180,7 @@ const trackPanes = computed(() => [
     id: 'titres',
     flag: '--all-time',
     items: list(raw.value?.top_tracks_all_time).slice(0, 5).map(toTrack),
-    empty: "(aucune écoute pour l'instant)",
+    empty: 'music.emptyAll',
     // Sa bordure droite (bureau) et basse (mobile) touche le panneau actif : lilas
     border: 'border-b-2 border-b-lilac md:border-b-line md:border-r-2 md:border-r-lilac'
   },
@@ -177,7 +188,7 @@ const trackPanes = computed(() => [
     id: 'semaine',
     flag: '--week',
     items: list(raw.value?.top_tracks_week).slice(0, 5).map(toTrack),
-    empty: '(aucune écoute cette semaine)',
+    empty: 'music.emptyWeek',
     // Panneau actif de tmux : bordures lilas
     border: 'border-b-2 border-b-lilac'
   }
@@ -208,7 +219,8 @@ const heat = computed(() => {
 
   const rows = hours.map((r) => r.map((v) => Math.max(0, Number(v) || 0)))
   const keys = list(raw.value?.heatmap?.days)
-  const days = (keys.length === 7 ? keys : Object.keys(DAYS)).map((k) => DAYS[k] || { letter: '?', name: String(k) })
+  const names = DAYS[locale.value] || DAYS.fr
+  const days = (keys.length === 7 ? keys : Object.keys(names)).map((k) => names[k] || { letter: '?', name: String(k) })
 
   const filled = rows.flat().filter((v) => v > 0).sort((a, b) => a - b)
   const quantile = (q) => filled[Math.min(filled.length - 1, Math.floor(q * filled.length))] ?? 0
@@ -218,8 +230,8 @@ const heat = computed(() => {
   let peak = { v: -1, d: 0, h: 0 }
   rows.forEach((r, d) => r.forEach((v, h) => { if (v > peak.v) peak = { v, d, h } }))
   const label = peak.v > 0
-    ? `Écoutes par jour et par heure. Créneau le plus chargé : ${days[peak.d].name} vers ${peak.h} h (${format(peak.v)} écoutes).`
-    : 'Écoutes par jour et par heure : aucune écoute.'
+    ? t('music.heatLabel', { day: days[peak.d].name, hour: peak.h, count: format(peak.v) })
+    : t('music.heatEmpty')
 
   return { rows, days, level, label }
 })
@@ -244,9 +256,10 @@ const updated = computed(() => {
   const date = new Date(raw.value?.updated_at)
   if (Number.isNaN(date.getTime())) return null
   const options = { timeZone: 'Europe/Paris' }
+  const time = date.toLocaleTimeString(intlLocale.value, { ...options, hour: '2-digit', minute: '2-digit' })
   return {
-    date: `${date.toLocaleDateString('fr-FR', { ...options, day: 'numeric', month: 'short' })} à ${date.toLocaleTimeString('fr-FR', { ...options, hour: '2-digit', minute: '2-digit' })}`,
-    time: date.toLocaleTimeString('fr-FR', { ...options, hour: '2-digit', minute: '2-digit' })
+    date: `${date.toLocaleDateString(intlLocale.value, { ...options, day: 'numeric', month: 'short' })} ${t('music.at')} ${time}`,
+    time
   }
 })
 

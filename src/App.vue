@@ -3,7 +3,7 @@
     <a
       href="#contenu"
       class="sr-only z-[70] border-2 border-lilac bg-primary px-4 py-2 font-mono text-sm font-bold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
-    >Aller au contenu</a>
+    >{{ t('app.skip') }}</a>
     <NavBar :scrollOpacity="scrollOpacity" />
     <ContactModal :isOpen="contactOpen" @close="contactOpen = false" />
     <Transition name="fade-slide" mode="out-in">
@@ -21,6 +21,7 @@ import { useRoute } from 'vue-router'
 import NavBar from './components/NavBar.vue'
 import Footer from './components/Footer.vue'
 import ContactModal from './components/ContactModal.vue'
+import { t } from './i18n'
 
 const route = useRoute()
 const scrollOpacity = ref(1)

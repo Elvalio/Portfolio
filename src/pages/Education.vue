@@ -2,14 +2,14 @@
   <div class="mx-auto flex max-w-[1100px] flex-col gap-12 px-4 pb-28 pt-[72px] sm:px-8">
     <!-- En-tête de page + légende -->
     <section class="flex flex-col gap-[18px]">
-      <PromptLabel code="Dossier FO" cmd="git log --graph --reverse parcours" />
-      <h1 class="titre-page font-display text-[clamp(56px,7vw,96px)] font-black uppercase leading-[0.95]">Parcours</h1>
-      <p class="max-w-[640px] text-lg text-muted-light">Ma formation et mes expériences, du bac au master, dans l'ordre.</p>
-      <ul aria-label="Légende" class="mt-2 flex flex-wrap gap-x-7 gap-y-3.5 border-2 border-line bg-surface px-[18px] py-3.5 font-mono text-[13px]">
-        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 border-2 border-lilac bg-primary" aria-hidden="true"></span>diplôme <span class="text-muted">· branche formation</span></li>
-        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 rounded-full bg-lilac" aria-hidden="true"></span>expérience <span class="text-muted">· branche pro</span></li>
-        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 rounded-full border-2 border-lilac" aria-hidden="true"></span>observation</li>
-        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 rounded-full bg-primary shadow-[0_0_0_4px_rgba(109,59,217,0.35)]" aria-hidden="true"></span>en cours <span class="text-muted">· HEAD</span></li>
+      <PromptLabel code="Dossier FO" :cmd="t('education.cmd')" />
+      <h1 class="titre-page break-words font-display text-[clamp(44px,11vw,96px)] font-black uppercase leading-[0.95]">{{ t('education.title') }}</h1>
+      <p class="max-w-[640px] text-lg text-muted-light">{{ t('education.intro') }}</p>
+      <ul :aria-label="t('education.legend')" class="mt-2 flex flex-wrap gap-x-7 gap-y-3.5 border-2 border-line bg-surface px-[18px] py-3.5 font-mono text-[13px]">
+        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 border-2 border-lilac bg-primary" aria-hidden="true"></span>{{ t('education.degree') }} <span class="text-muted">{{ t('education.degreeBranch') }}</span></li>
+        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 rounded-full bg-lilac" aria-hidden="true"></span>{{ t('education.experience') }} <span class="text-muted">{{ t('education.experienceBranch') }}</span></li>
+        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 rounded-full border-2 border-lilac" aria-hidden="true"></span>{{ t('education.observation') }}</li>
+        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 rounded-full bg-primary shadow-[0_0_0_4px_rgba(109,59,217,0.35)]" aria-hidden="true"></span>{{ t('education.current') }} <span class="text-muted">· HEAD</span></li>
       </ul>
     </section>
 
@@ -35,7 +35,7 @@
             :bg="step.type === 'en-cours' ? 'primary-dark' : 'surface'"
             :shadow="step.type === 'en-cours' || step.type === 'diplome' ? 'primary' : 'dark'"
             :shadow-size="step.type === 'en-cours' ? 10 : 6"
-            :stamp="step.stamp"
+            :stamp="tr(step.stamp)"
             :stamp-tone="stampTones[step.type]"
             stamp-size="sm"
             :stamp-rotate="[-5, 4, -4, 5, -6, -4][i % 6]"
@@ -45,20 +45,20 @@
               class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-b-2 px-[18px] py-2.5"
               :class="[step.type === 'en-cours' ? 'bg-primary' : 'bg-primary-dark', step.lane === 'formation' ? 'border-lilac' : 'border-line']"
             >
-              <h2 class="font-display text-xl font-extrabold uppercase">{{ step.title }}</h2>
-              <span class="font-mono text-xs" :class="step.type === 'en-cours' ? 'font-bold text-white' : 'text-lilac'">{{ step.code }} · {{ step.dates }}</span>
+              <h2 class="font-display text-xl font-extrabold uppercase">{{ tr(step.title) }}</h2>
+              <span class="font-mono text-xs" :class="step.type === 'en-cours' ? 'font-bold text-white' : 'text-lilac'">{{ step.code }} · {{ tr(step.dates) }}</span>
             </div>
             <div class="flex flex-col gap-2 px-[18px] pb-[22px] pt-3.5">
-              <p class="font-mono text-[13px]" :class="step.type === 'en-cours' ? 'text-lilac' : 'text-accent-text'">{{ step.commit }}</p>
-              <p v-if="step.text" :class="step.type === 'en-cours' ? 'text-bg-light' : 'text-muted-light'">{{ step.text }}</p>
+              <p class="font-mono text-[13px]" :class="step.type === 'en-cours' ? 'text-lilac' : 'text-accent-text'">{{ tr(step.commit) }}</p>
+              <p v-if="step.text" :class="step.type === 'en-cours' ? 'text-bg-light' : 'text-muted-light'">{{ tr(step.text) }}</p>
               <ul v-if="step.items" class="flex flex-col gap-1 text-muted-light">
-                <li v-for="item in step.items" :key="item"><span class="font-mono text-accent-text" aria-hidden="true">+</span> {{ item }}</li>
+                <li v-for="(item, n) in step.items" :key="n"><span class="font-mono text-accent-text" aria-hidden="true">+</span> {{ tr(item) }}</li>
               </ul>
               <router-link
                 v-if="step.project"
                 :to="{ name: 'Projects', query: { project: step.project } }"
                 class="inline-flex min-h-[44px] items-center self-start font-mono text-sm font-bold"
-              >→ voir le projet {{ projectTitle(step.project) }}</router-link>
+              >{{ t('education.seeProject', { title: projectTitle(step.project) }) }}</router-link>
             </div>
           </Fiche>
         </div>
@@ -68,9 +68,9 @@
     <!-- git status : prochaine étape -->
     <section v-if="search.open" class="mt-6 flex flex-col gap-1.5 border-2 border-line bg-ink-deep px-5 py-6 font-mono text-sm sm:px-7">
       <h2 class="text-muted"><span class="text-accent-text">$</span> git status</h2>
-      <p>Sur la branche main</p>
-      <p class="text-muted-light">Prochaine étape : {{ search.nextStep }}.</p>
-      <p class="text-muted-light">  (utilisez "<button type="button" class="text-accent-text transition-colors hover:text-lilac" @click="openContact">./contact.sh</button>" pour en parler)</p>
+      <p>{{ t('education.onBranch') }}</p>
+      <p class="text-muted-light">{{ t('education.nextStep', { step: tr(search.nextStep) }) }}</p>
+      <p class="text-muted-light">{{ t('education.hintBefore') }}<button type="button" class="text-accent-text transition-colors hover:text-lilac" @click="openContact">./contact.sh</button>{{ t('education.hintAfter') }}</p>
       <p class="mt-2 flex items-center gap-1.5" aria-hidden="true"><span class="text-accent-text">$</span><span class="curseur inline-block h-[18px] w-[9px] bg-accent-text"></span></p>
     </section>
   </div>
@@ -83,6 +83,7 @@ import PromptLabel from '../components/PromptLabel.vue'
 import { timeline } from '../data/timeline.js'
 import { projects } from '../data/projects.js'
 import { search } from '../data/profile.js'
+import { t, tr } from '../i18n'
 
 const openContact = inject('openContact')
 
