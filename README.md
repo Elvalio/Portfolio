@@ -16,7 +16,7 @@ Site personnel présentant mon parcours, mes compétences et mes projets. Dével
 | | |
 |---|---|
 | Framework | Vue 3 |
-| Build | Vite 5 |
+| Build | Vite 8 |
 | Styles | Tailwind CSS, PostCSS |
 | Routage | Vue Router 4 |
 | Formulaire de contact | Web3Forms |
