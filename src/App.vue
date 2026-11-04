@@ -1,9 +1,13 @@
 <template>
-  <div class="min-h-screen text-gray-100 bg-gradient-to-b from-primary-dark via-gray-900 to-gray-800">
+  <div class="grille min-h-screen text-bg-light">
+    <a
+      href="#contenu"
+      class="sr-only z-[70] border-2 border-lilac bg-primary px-4 py-2 font-mono text-sm font-bold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+    >Aller au contenu</a>
     <NavBar :scrollOpacity="scrollOpacity" />
     <ContactModal :isOpen="contactOpen" @close="contactOpen = false" />
     <Transition name="fade-slide" mode="out-in">
-      <main :key="route.path" :class="isHomePage ? '' : 'container mx-auto px-4 py-10 min-h-[calc(100vh-120px)]'">
+      <main id="contenu" :key="route.path" tabindex="-1" class="outline-none" :class="isHomePage ? '' : 'min-h-[calc(100vh-120px)] pt-[74px]'">
         <router-view @update-scroll="updateScroll" />
       </main>
     </Transition>
@@ -33,7 +37,7 @@ const updateScroll = (opacity) => {
 
 watch(() => route.path, () => {
   scrollOpacity.value = isHomePage.value ? 0 : 1
-})
+}, { immediate: true })
 </script>
 
 <style scoped>
@@ -52,9 +56,15 @@ watch(() => route.path, () => {
   transform: translateY(-10px);
 }
 
-.fade-slide-enter-to,
-.fade-slide-leave-from {
-  opacity: 1;
-  transform: translateY(0);
+@media (prefers-reduced-motion: reduce) {
+  .fade-slide-enter-active,
+  .fade-slide-leave-active {
+    transition: none;
+  }
+
+  .fade-slide-enter-from,
+  .fade-slide-leave-to {
+    transform: none;
+  }
 }
 </style>

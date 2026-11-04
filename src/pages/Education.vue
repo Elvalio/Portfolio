@@ -1,438 +1,220 @@
 <template>
-  <section class="py-12 md:py-16 px-4 md:px-8 min-h-screen">
-    <div class="max-w-4xl mx-auto">
-      <!-- Header -->
-      <div class="mb-12 text-center">
-        <h2 class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-purple-400 to-primary bg-clip-text text-transparent">Mon Parcours</h2>
-        <p class="text-muted-light text-lg">Une chronologie de ma formation et de mes expériences professionnelles</p>
-      </div>
+  <div class="mx-auto flex max-w-[1100px] flex-col gap-12 px-4 pb-28 pt-[72px] sm:px-8">
+    <!-- En-tête de page + légende -->
+    <section class="flex flex-col gap-[18px]">
+      <PromptLabel code="Dossier FO" cmd="git log --graph --reverse parcours" />
+      <h1 class="titre-page font-display text-[clamp(56px,7vw,96px)] font-black uppercase leading-[0.95]">Parcours</h1>
+      <p class="max-w-[640px] text-lg text-muted-light">Ma formation et mes expériences, du bac au master, dans l'ordre.</p>
+      <ul aria-label="Légende" class="mt-2 flex flex-wrap gap-x-7 gap-y-3.5 border-2 border-line bg-surface px-[18px] py-3.5 font-mono text-[13px]">
+        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 border-2 border-lilac bg-primary" aria-hidden="true"></span>diplôme <span class="text-muted">· branche formation</span></li>
+        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 rounded-full bg-lilac" aria-hidden="true"></span>expérience <span class="text-muted">· branche pro</span></li>
+        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 rounded-full border-2 border-lilac" aria-hidden="true"></span>observation</li>
+        <li class="inline-flex items-center gap-2.5"><span class="h-3.5 w-3.5 rounded-full bg-primary shadow-[0_0_0_4px_rgba(109,59,217,0.35)]" aria-hidden="true"></span>en cours <span class="text-muted">· HEAD</span></li>
+      </ul>
+    </section>
 
-      <!-- Vertical Timeline -->
-      <div class="relative">
-        <!-- Central Timeline Line -->
-        <div class="timeline-line"></div>
-
-        <!-- Timeline Items Container - Vertical Layout -->
-        <div class="space-y-12 relative">
-          <div
-            v-for="(item, index) in timeline"
-            :key="item.title"
-            class="timeline-item"
-            :class="index % 2 === 0 ? 'timeline-left' : 'timeline-right'"
-          >
-            <!-- Timeline Dot -->
-            <div class="timeline-marker">
-              <div class="marker-dot" :class="variants[item.variant].marker"></div>
-            </div>
-
-            <!-- Card -->
-            <div class="timeline-card group w-full md:w-96" :class="variants[item.variant].card">
-              <!-- Header with Icon and Badge -->
-              <div class="flex items-start gap-4 mb-4">
-                <div class="w-12 h-12 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0" :class="variants[item.variant].iconBg">
-                  <svg class="w-6 h-6" :class="variants[item.variant].color" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path v-for="d in icons[item.icon]" :key="d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="d"/>
-                  </svg>
-                </div>
-                <div class="badge" :class="variants[item.variant].badge" :style="variants[item.variant].badgeStyle">{{ item.badge }}</div>
-              </div>
-
-              <!-- Content -->
-              <h3 class="text-2xl font-bold text-white mb-2">{{ item.title }}</h3>
-              <p class="font-semibold mb-1 text-base" :class="variants[item.variant].color">{{ item.date }}</p>
-              <p class="text-sm text-muted-light mb-3">{{ item.place }}</p>
-              <p v-if="item.text" class="text-sm text-gray-300 leading-relaxed" v-html="item.text"></p>
-
-              <!-- Skills Grid -->
-              <div v-if="item.skills" class="space-y-2">
-                <div v-for="skill in item.skills" :key="skill.title" class="skill-item">
-                  <p class="text-xs font-semibold text-white/90 flex items-center gap-2 mb-1">
-                    <span class="w-1.5 h-1.5 rounded-full" :class="variants[item.variant].dot"></span>
-                    {{ skill.title }}
-                  </p>
-                  <p v-if="skill.detail" class="text-xs text-muted-light leading-tight">{{ skill.detail }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!-- Frise : graphe Git + fiches -->
+    <ol class="graphe">
+      <li v-for="(step, i) in rows" :key="step.key" class="grid grid-cols-[var(--gouttiere)_minmax(0,1fr)]">
+        <!-- Graphe (décoratif) -->
+        <div class="relative" aria-hidden="true">
+          <span class="trait voie-a" :style="{ top: step.formTop, height: step.formHeight, bottom: step.formHeight ? 'auto' : '0' }"></span>
+          <span v-if="step.pro" class="trait voie-b" :style="{ top: step.proTop }"></span>
+          <span v-if="step.branchOut" class="branche"></span>
+          <template v-if="step.mergeIn">
+            <svg class="fusion hidden md:block" width="96" height="40" viewBox="0 0 96 40"><path d="M68.5 0 V8 Q68.5 29 40 29" /></svg>
+            <svg class="fusion md:hidden" width="60" height="40" viewBox="0 0 60 40"><path d="M44.5 0 V8 Q44.5 29 28 29" /></svg>
+          </template>
+          <span class="repere" :class="`repere-${step.type}`"></span>
         </div>
-      </div>
-    </div>
-  </section>
+
+        <!-- Fiche -->
+        <div :class="i === rows.length - 1 ? 'pb-2' : 'pb-12'">
+          <Fiche
+            :border="step.lane === 'formation' ? 'lilac' : 'line'"
+            :bg="step.type === 'en-cours' ? 'primary-dark' : 'surface'"
+            :shadow="step.type === 'en-cours' || step.type === 'diplome' ? 'primary' : 'dark'"
+            :shadow-size="step.type === 'en-cours' ? 10 : 6"
+            :stamp="step.stamp"
+            :stamp-tone="stampTones[step.type]"
+            stamp-size="sm"
+            :stamp-rotate="[-5, 4, -4, 5, -6, -4][i % 6]"
+            stamp-class="-bottom-[15px] right-[18px]"
+          >
+            <div
+              class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-b-2 px-[18px] py-2.5"
+              :class="[step.type === 'en-cours' ? 'bg-primary' : 'bg-primary-dark', step.lane === 'formation' ? 'border-lilac' : 'border-line']"
+            >
+              <h2 class="font-display text-xl font-extrabold uppercase">{{ step.title }}</h2>
+              <span class="font-mono text-xs" :class="step.type === 'en-cours' ? 'font-bold text-white' : 'text-lilac'">{{ step.code }} · {{ step.dates }}</span>
+            </div>
+            <div class="flex flex-col gap-2 px-[18px] pb-[22px] pt-3.5">
+              <p class="font-mono text-[13px]" :class="step.type === 'en-cours' ? 'text-lilac' : 'text-accent-text'">{{ step.commit }}</p>
+              <p v-if="step.text" :class="step.type === 'en-cours' ? 'text-bg-light' : 'text-muted-light'">{{ step.text }}</p>
+              <ul v-if="step.items" class="flex flex-col gap-1 text-muted-light">
+                <li v-for="item in step.items" :key="item"><span class="font-mono text-accent-text" aria-hidden="true">+</span> {{ item }}</li>
+              </ul>
+              <router-link
+                v-if="step.project"
+                :to="{ name: 'Projects', query: { project: step.project } }"
+                class="inline-flex min-h-[44px] items-center self-start font-mono text-sm font-bold"
+              >→ voir le projet {{ projectTitle(step.project) }}</router-link>
+            </div>
+          </Fiche>
+        </div>
+      </li>
+    </ol>
+
+    <!-- git status : prochaine étape -->
+    <section v-if="search.open" class="mt-6 flex flex-col gap-1.5 border-2 border-line bg-ink-deep px-5 py-6 font-mono text-sm sm:px-7">
+      <h2 class="text-muted"><span class="text-accent-text">$</span> git status</h2>
+      <p>Sur la branche main</p>
+      <p class="text-muted-light">Prochaine étape : {{ search.nextStep }}.</p>
+      <p class="text-muted-light">  (utilisez "<button type="button" class="text-accent-text transition-colors hover:text-lilac" @click="openContact">./contact.sh</button>" pour en parler)</p>
+      <p class="mt-2 flex items-center gap-1.5" aria-hidden="true"><span class="text-accent-text">$</span><span class="curseur inline-block h-[18px] w-[9px] bg-accent-text"></span></p>
+    </section>
+  </div>
 </template>
 
 <script setup>
+import { inject } from 'vue'
+import Fiche from '../components/Fiche.vue'
+import PromptLabel from '../components/PromptLabel.vue'
 import { timeline } from '../data/timeline.js'
+import { projects } from '../data/projects.js'
+import { search } from '../data/profile.js'
 
-// Couleurs et classes associées à chaque type d'étape
-const variants = {
-  observation: {
-    color: 'text-purple-400',
-    dot: 'bg-purple-400',
-    iconBg: 'from-purple-500/20 to-purple-500/10',
-    marker: '',
-    card: '',
-    badge: '',
-    badgeStyle: 'background: rgba(168, 85, 247, 0.2); color: rgb(192, 132, 252); border-color: rgba(168, 85, 247, 0.4);'
-  },
-  done: {
-    color: 'text-amber-400',
-    dot: 'bg-amber-400',
-    iconBg: 'from-amber-500/20 to-amber-500/10',
-    marker: '',
-    card: '',
-    badge: '',
-    badgeStyle: ''
-  },
-  experience: {
-    color: 'text-blue-400',
-    dot: 'bg-blue-400',
-    iconBg: 'from-blue-500/20 to-blue-500/10',
-    marker: 'highlight',
-    card: 'highlight',
-    badge: 'highlight',
-    badgeStyle: ''
-  },
-  active: {
-    color: 'text-primary',
-    dot: 'bg-primary',
-    iconBg: 'from-primary/30 to-primary/10',
-    marker: 'active',
-    card: 'active',
-    badge: 'active',
-    badgeStyle: ''
-  }
-}
+const openContact = inject('openContact')
 
-// Tracés des icônes (Heroicons, viewBox 24x24)
-const icons = {
-  eye: [
-    'M15 12a3 3 0 11-6 0 3 3 0 016 0z',
-    'M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'
-  ],
-  school: [
-    'M12 14l9-5-9-5-9 5 9 5z',
-    'M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z'
-  ],
-  bolt: ['M13 10V3L4 14h7v7l9-11h-7z']
-}
+const stampTones = { diplome: 'default', observation: 'muted', experience: 'default', 'en-cours': 'filled' }
+const projectTitle = (key) => projects.find((p) => p.key === key)?.title || key
+
+// Tracé du graphe pour chaque étape : la branche « formation » court du début à
+// la fin, la branche « pro » s'ouvre à la première étape pro et fusionne dans
+// la dernière étape.
+const last = timeline.length - 1
+const firstPro = timeline.findIndex((s) => s.lane === 'pro')
+
+const rows = timeline.map((step, i) => ({
+  ...step,
+  // Branche formation : part du repère sur la 1re ligne, s'arrête au repère sur la dernière
+  formTop: i === 0 ? '30px' : '0',
+  formHeight: i === last ? '22px' : '',
+  // Branche pro : de la ligne qui l'ouvre jusqu'à l'avant-dernière ligne
+  pro: firstPro >= 0 && i >= firstPro && i < last,
+  proTop: i === firstPro ? '30px' : '0',
+  branchOut: i === firstPro,
+  mergeIn: firstPro >= 0 && i === last
+}))
 </script>
 
 <style scoped>
-/* Timeline Line */
-.timeline-line {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  margin-left: -2px;
-  background: linear-gradient(180deg, rgba(99, 102, 241, 0), rgba(99, 102, 241, 1), rgba(99, 102, 241, 0));
+/* Géométrie du graphe : position des deux branches dans la gouttière */
+.graphe {
+  --gouttiere: 60px;
+  --voie-a: 15px;
+  --voie-b: 43px;
 }
 
-/* Timeline Layout */
-.timeline-item {
-  opacity: 0;
-  animation: fadeInScale 0.7s ease-out forwards;
-  display: flex;
-  position: relative;
-  gap: 2rem;
-}
-
-.timeline-item:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.timeline-item:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.timeline-item:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-.timeline-item:nth-child(4) {
-  animation-delay: 0.4s;
-}
-
-.timeline-item:nth-child(5) {
-  animation-delay: 0.5s;
-}
-
-.timeline-item:nth-child(6) {
-  animation-delay: 0.6s;
-}
-
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Alternating Left-Right Layout */
-.timeline-left {
-  justify-content: flex-end;
-}
-
-.timeline-left .timeline-card {
-  text-align: right;
-}
-
-.timeline-right {
-  justify-content: flex-start;
-}
-
-.timeline-right .timeline-card {
-  text-align: left;
-}
-
-/* Timeline Marker (Dot on the timeline) */
-.timeline-marker {
-  position: absolute;
-  left: 50%;
-  top: 2rem;
-  transform: translateX(-50%);
-  z-index: 10;
-  width: 0;
-}
-
-.marker-dot {
-  width: 16px;
-  height: 16px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(99, 102, 241, 0.8));
-  border: 3px solid rgba(17, 24, 39, 1);
-  border-radius: 50%;
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.3), inset 0 0 10px rgba(99, 102, 241, 0.2);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-}
-
-.marker-dot:hover {
-  width: 24px;
-  height: 24px;
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.6), inset 0 0 15px rgba(99, 102, 241, 0.3);
-  margin-top: -4px;
-  margin-left: -4px;
-}
-
-.marker-dot.active {
-  background: linear-gradient(135deg, var(--primary), rgba(99, 102, 241, 1));
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.8), inset 0 0 15px rgba(99, 102, 241, 0.4);
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.marker-dot.highlight {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(59, 130, 246, 0.8));
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.3), inset 0 0 10px rgba(59, 130, 246, 0.2);
-}
-
-.marker-dot.highlight:hover {
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.6), inset 0 0 15px rgba(59, 130, 246, 0.3);
-}
-
-/* Timeline Cards */
-.timeline-card {
-  position: relative;
-  padding: 28px;
-  background: linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(17, 24, 39, 0.4) 100%);
-  border: 1px solid rgba(107, 114, 128, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-/* Gradient top border effect */
-.timeline-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--color-primary, #6366f1), transparent);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.timeline-card:hover::before {
-  opacity: 1;
-}
-
-/* Hover Effects */
-.timeline-card:hover {
-  border-color: rgba(99, 102, 241, 0.4);
-  background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(17, 24, 39, 0.5) 100%);
-  transform: translateY(-6px);
-  box-shadow: 0 20px 50px rgba(99, 102, 241, 0.15), 0 0 40px rgba(99, 102, 241, 0.1);
-}
-
-.timeline-card.active {
-  border-color: rgba(99, 102, 241, 0.5);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(17, 24, 39, 0.6) 100%);
-  box-shadow: 0 0 40px rgba(99, 102, 241, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.timeline-card.active:hover {
-  border-color: rgba(99, 102, 241, 0.7);
-  box-shadow: 0 20px 50px rgba(99, 102, 241, 0.25), 0 0 40px rgba(99, 102, 241, 0.15);
-  transform: translateY(-8px);
-}
-
-.timeline-card.highlight {
-  border-color: rgba(59, 130, 246, 0.3);
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(17, 24, 39, 0.6) 100%);
-}
-
-.timeline-card.highlight:hover {
-  border-color: rgba(59, 130, 246, 0.6);
-  box-shadow: 0 20px 50px rgba(59, 130, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.08);
-  transform: translateY(-6px);
-}
-
-/* Badge Styling */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: rgba(107, 114, 128, 0.2);
-  color: rgb(156, 163, 175);
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 999px;
-  border: 1px solid rgba(107, 114, 128, 0.3);
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  width: fit-content;
-}
-
-.badge.active {
-  background: rgba(99, 102, 241, 0.2);
-  color: rgb(129, 140, 248);
-  border-color: rgba(99, 102, 241, 0.4);
-}
-
-.badge.active::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: rgb(129, 140, 248);
-  border-radius: 50%;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.badge.highlight {
-  background: rgba(59, 130, 246, 0.2);
-  color: rgb(96, 165, 250);
-  border-color: rgba(59, 130, 246, 0.4);
-}
-
-.badge.highlight::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: rgb(96, 165, 250);
-  border-radius: 50%;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Skill Items */
-.skill-item {
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
-}
-
-.skill-item:hover {
-  background: rgba(99, 102, 241, 0.08);
-  border-color: rgba(99, 102, 241, 0.2);
-  transform: translateX(-2px);
-}
-
-/* Pulse Animation */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .timeline-item {
-    flex-direction: column;
-    justify-content: flex-start !important;
-    gap: 1rem;
-  }
-
-  .timeline-left,
-  .timeline-right {
-    justify-content: flex-start;
-  }
-
-  .timeline-left .timeline-card,
-  .timeline-right .timeline-card {
-    text-align: left !important;
-  }
-
-  .timeline-marker {
-    position: static;
-    transform: none;
-    width: auto;
-    margin-bottom: -1.5rem;
-    z-index: 0;
-  }
-
-  .marker-dot {
-    width: 12px;
-    height: 12px;
-  }
-
-  .marker-dot:hover {
-    width: 16px;
-    height: 16px;
-  }
-
-  .timeline-card {
-    padding: 20px;
-    width: 100% !important;
-  }
-
-  /* Hide the central timeline line on mobile */
-  .timeline-line {
-    display: none;
-  }
-}
-
-/* Desktop responsive container */
 @media (min-width: 768px) {
-  .timeline-item {
-    width: 100%;
-    justify-content: space-between;
+  .graphe {
+    --gouttiere: 96px;
+    --voie-a: 27px;
+    --voie-b: 67px;
   }
+}
 
-  .timeline-left {
-    flex-direction: row-reverse;
-    justify-content: flex-start;
-  }
+.trait {
+  position: absolute;
+  bottom: 0;
+  width: 3px;
+}
 
-  .timeline-card {
-    width: calc(50% - 1rem);
+.voie-a {
+  left: var(--voie-a);
+  background-color: #6D3BD9;
+}
+
+.voie-b {
+  left: var(--voie-b);
+  background-color: #CDBBF8;
+}
+
+/* Ouverture de la branche pro */
+.branche {
+  position: absolute;
+  top: 29px;
+  left: calc(var(--voie-a) + 3px);
+  width: calc(var(--voie-b) - var(--voie-a) - 3px);
+  border-top: 3px dashed #CDBBF8;
+}
+
+/* Fusion de la branche pro dans la dernière étape */
+.fusion {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.fusion path {
+  fill: none;
+  stroke: #CDBBF8;
+  stroke-width: 3;
+  stroke-dasharray: 5 4;
+}
+
+.repere {
+  position: absolute;
+  box-sizing: border-box;
+}
+
+/* Diplôme : carré violet sur la branche formation */
+.repere-diplome {
+  top: 20px;
+  left: calc(var(--voie-a) - 8px);
+  width: 19px;
+  height: 19px;
+  background-color: #6D3BD9;
+  border: 2px solid #CDBBF8;
+}
+
+/* Expérience : rond plein lilas sur la branche pro */
+.repere-experience {
+  top: 20px;
+  left: calc(var(--voie-b) - 9px);
+  width: 21px;
+  height: 21px;
+  border-radius: 9999px;
+  background-color: #CDBBF8;
+}
+
+/* Observation : rond vide lilas sur la branche pro */
+.repere-observation {
+  top: 20px;
+  left: calc(var(--voie-b) - 9px);
+  width: 21px;
+  height: 21px;
+  border-radius: 9999px;
+  background-color: #0E0D24;
+  border: 3px solid #CDBBF8;
+}
+
+/* En cours : rond violet avec halo pulsé, sur la branche formation */
+.repere-en-cours {
+  top: 19px;
+  left: calc(var(--voie-a) - 9px);
+  width: 21px;
+  height: 21px;
+  border-radius: 9999px;
+  background-color: #6D3BD9;
+  border: 2px solid #CDBBF8;
+  box-shadow: 0 0 0 5px rgba(109, 59, 217, 0.35);
+  animation: halo 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .repere-en-cours {
+    animation: none;
   }
 }
 </style>

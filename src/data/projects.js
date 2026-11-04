@@ -2,22 +2,39 @@ import PortfolioImg from '../assets/Portfolio.webp'
 import MuseImg from '../assets/MUSE.webp'
 import TripImg from '../assets/LPPDT.webp'
 
-// Statuts possibles et style du badge associé
-export const statusStyles = {
-  'Terminé': 'text-emerald-300 bg-emerald-500/15 border-emerald-400/30',
-  'En cours': 'text-amber-300 bg-amber-500/15 border-amber-400/30',
-  'En production': 'text-primary bg-primary/15 border-primary/30'
+// Catégories des onglets de filtre de la page Projets, dans l'ordre d'affichage
+export const categories = [
+  { key: 'stage', label: 'stage', tab: 'pro' },
+  { key: 'universite', label: 'université', tab: 'université' },
+  { key: 'perso', label: 'perso', tab: 'perso' }
+]
+
+// Tampon associé à chaque statut (libellé court et style)
+export const statusStamps = {
+  'Terminé': { label: 'Terminé', tone: 'default' },
+  'En cours': { label: 'En cours', tone: 'filled' },
+  'En production': { label: 'En prod', tone: 'filled' }
 }
 
 // Liste des projets, dans l'ordre d'affichage.
-// featured: affiché sur la page d'accueil.
+// featured : grande fiche sur l'accueil.
+// slug / kind : nom et type d'entrée dans l'index façon `ls -la`.
+// cadre : contexte court (index et petites fiches) ; context : ligne mono des grandes fiches.
+// pitch : description des grandes fiches de l'accueil ; short : une ligne pour les petites fiches.
 export const projects = [
   {
     key: 'soleur',
+    slug: 'soleur',
+    kind: 'dir',
     featured: true,
+    category: 'stage',
+    year: 2026,
     title: 'Soleur',
     subtitle: "Plateforme open source d'agents IA pour fondateurs solo — stage chez Jikigai",
-    short: "Plateforme d'agents IA pour fondateurs solo, développée pendant mon stage de fin de BUT.",
+    cadre: 'stage · Jikigai',
+    context: 'Stage de fin de BUT · Jikigai · 2026',
+    pitch: "Plateforme open source d'agents IA pour fondateurs solo. J'ai contribué à l'application web, à la base Supabase, à la CI/CD et au plugin Claude Code qui orchestre les agents.",
+    short: "Plateforme open source d'agents IA pour fondateurs solo.",
     status: 'Terminé',
     image: null,
     tech: ['Next.js', 'Supabase', 'PostgreSQL', 'Terraform', 'Claude Code'],
@@ -35,18 +52,26 @@ export const projects = [
         ]
       }
     ],
-    aside: {
-      title: 'Organisation',
-      text: 'Télétravail avec présentiel régulier en coworking, suivi des tâches en sprints sur Linear.'
-    },
+    facts: [
+      { key: 'cadre', value: 'stage de fin de BUT' },
+      { key: 'période', value: 'mai – août 2026' },
+      { key: 'équipe', value: 'télétravail, sprints Linear' }
+    ],
     repo: 'https://github.com/jikig-ai/soleur'
   },
   {
     key: 'trip',
+    slug: 'trip-en-armor',
+    kind: 'dir',
     featured: true,
+    category: 'universite',
+    year: 2025,
     title: 'Trip en Armor',
     subtitle: "Plateforme d'avis et d'offres touristiques (BUT2, Agile Scrum)",
-    short: "Plateforme d'offres et d'avis touristiques avec rôles utilisateur, réalisée en Agile Scrum.",
+    cadre: 'université · BUT2',
+    context: 'BUT2 · équipe de 8 · Agile Scrum',
+    pitch: "Plateforme d'offres et d'avis touristiques, avec Tchatator, une messagerie écrite en C. J'ai pris en charge les modules d'offres, d'avis et de compte, en front et en back.",
+    short: 'Offres et avis touristiques, avec une messagerie en C.',
     status: 'Terminé',
     image: TripImg,
     tech: ['PHP', 'PostgreSQL', 'HTML', 'CSS', 'JavaScript', 'C'],
@@ -65,18 +90,25 @@ export const projects = [
         ]
       }
     ],
-    aside: {
-      title: 'Rôle',
-      text: "Front et back sur les modules d'offres, d'avis et de compte."
-    },
+    facts: [
+      { key: 'cadre', value: 'projet universitaire, BUT2' },
+      { key: 'équipe', value: '8 personnes, Agile Scrum' },
+      { key: 'rôle', value: "front et back : offres, avis et compte" }
+    ],
     repo: 'https://github.com/Elvalio/LPPDT'
   },
   {
     key: 'muse',
+    slug: 'muse',
+    kind: 'dir',
     featured: false,
+    category: 'universite',
+    year: 2026,
     title: 'Muse',
     subtitle: 'Système de recommandation musicale (BUT3, projet de groupe)',
-    short: 'Recommandation musicale : collecte des préférences, analyses de données et prototypes de modèles.',
+    cadre: 'université · BUT3',
+    context: 'BUT3 · équipe de 6 + 2 alternants',
+    short: 'Recommandation musicale : données, analyses, prototypes.',
     status: 'Terminé',
     image: MuseImg,
     tech: ['Python', 'Pandas', 'Matplotlib', 'Seaborn'],
@@ -94,18 +126,24 @@ export const projects = [
         ]
       }
     ],
-    aside: {
-      title: 'Organisation',
-      text: 'Équipe de 6 (+ 2 alternants), backlog, rétrospectives, alternance des responsabilités.'
-    },
+    facts: [
+      { key: 'cadre', value: 'projet universitaire, BUT3' },
+      { key: 'équipe', value: '6 étudiants + 2 alternants, 3 sprints' }
+    ],
     repo: 'https://github.com/Elvalio/SAE_AIKON'
   },
   {
     key: 'sudoku',
+    slug: 'sudoku',
+    kind: 'file',
     featured: false,
+    category: 'universite',
+    year: 2024,
     title: 'Sudoku',
     subtitle: 'Jeu de Sudoku en ligne de commande (BUT1)',
-    short: 'Jeu de Sudoku jouable dans le terminal, écrit en C à partir d’un algorithme en pseudo-code.',
+    cadre: 'université · BUT1',
+    context: 'BUT1 · projet individuel',
+    short: 'Sudoku jouable dans le terminal, conçu en pseudo-code.',
     status: 'Terminé',
     image: null,
     tech: ['C', 'Algorithmique'],
@@ -121,15 +159,23 @@ export const projects = [
         ]
       }
     ],
-    aside: null,
+    facts: [
+      { key: 'cadre', value: 'projet universitaire, BUT1' }
+    ],
     repo: 'https://github.com/Elvalio/Sudoku'
   },
   {
     key: 'portfolio',
+    slug: 'portfolio',
+    kind: 'dir',
     featured: false,
+    category: 'perso',
+    year: 2026,
     title: 'Portfolio',
     subtitle: 'Ce site, en amélioration continue',
-    short: 'Site personnel en Vue 3 et Tailwind CSS, déployé sur GitHub Pages.',
+    cadre: 'perso',
+    context: 'Projet personnel · en production',
+    short: 'Ce site, déployé sur GitHub Pages.',
     status: 'En production',
     image: PortfolioImg,
     tech: ['Vue 3', 'Vite', 'Tailwind CSS', 'Vue Router'],
@@ -139,17 +185,17 @@ export const projects = [
       {
         title: 'Fonctionnalités',
         items: [
-          'Page d’accueil plein écran, navigation qui apparaît au défilement',
-          'Frise chronologique de la formation et des expériences',
+          'Page d’accueil plein écran et bandeau défilant',
+          'Frise du parcours dessinée comme un graphe Git',
           'Fiches projets accessibles par lien direct',
           'Formulaire de contact (Web3Forms)'
         ]
       }
     ],
-    aside: {
-      title: 'Rôle',
-      text: 'Conception, intégration et déploiement.'
-    },
+    facts: [
+      { key: 'cadre', value: 'projet personnel' },
+      { key: 'rôle', value: 'conception, intégration et déploiement' }
+    ],
     repo: 'https://github.com/Elvalio/Portfolio'
   }
 ]

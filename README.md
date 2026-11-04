@@ -6,10 +6,14 @@ Site personnel présentant mon parcours, mes compétences et mes projets. Dével
 
 ## Contenu
 
-- **Accueil** — présentation, projets mis en avant et compétences
-- **Projets** — fiches détaillées des réalisations, accessibles par lien direct (`/projects?project=soleur`)
-- **Formation** — formation et expériences, sous forme de frise chronologique
-- **Contact** — formulaire (Web3Forms) accessible depuis l'accueil et le pied de page
+- **Accueil** — Hero plein écran, bandeau défilant, fiches `whoami`, projets mis en avant, `stack.json` et recherche d'alternance
+- **Projets** — index façon `ls -la`, onglets de filtre et fiche « README » de chaque projet, accessible par lien direct (`/projects?project=soleur`)
+- **Formation** — formation et expériences, sous forme de frise dessinée comme un graphe Git
+- **Contact** — fenêtre façon terminal (Web3Forms), accessible depuis la navigation, l'accueil, la frise et le pied de page
+
+## Design
+
+Direction « Dossier × Terminal », en thème sombre : fiches numérotées avec onglets de classeur, tampons de statut, ombres portées dures, habillées de références terminal et Git. Les couleurs, polices et ombres sont des tokens Tailwind (`tailwind.config.cjs`) ; les polices Archivo, JetBrains Mono et Inter viennent de Google Fonts. Les animations (bandeau, curseur, halo) s'arrêtent si le visiteur a demandé de réduire les animations.
 
 ## Stack
 
@@ -39,9 +43,9 @@ npm run preview   # prévisualisation du build
 
 Le contenu est séparé de la mise en page, dans `src/data/` :
 
-- `projects.js` — liste des projets (le champ `featured` les affiche sur l'accueil)
-- `timeline.js` — étapes de la frise Formation
-- `profile.js` — coordonnées, liens, compétences et clé du formulaire de contact
+- `projects.js` — liste des projets (`featured` : grande fiche sur l'accueil ; `category` : onglet de filtre)
+- `timeline.js` — étapes de la frise Formation (`type` et `lane` placent l'étape sur le graphe ; `ticker` l'ajoute au bandeau défilant)
+- `profile.js` — coordonnées, textes de l'accueil (`whoami`, `profil.yml`, `stack.json`, « À côté du code »), recherche d'alternance et clé du formulaire de contact. Un texte laissé vide n'est pas affiché.
 
 Le CV téléchargeable est `public/CV.pdf`.
 
@@ -59,9 +63,9 @@ Le site étant servi depuis un sous-chemin, la base est fixée à `/Portfolio/` 
 
 ```
 src/
-  components/   NavBar, Footer, ProjectCard, ContactModal
+  components/   NavBar, Footer, Marquee, ContactModal, Fiche, Stamp, TagList, PromptLabel, ProjectCard
   pages/        Home, Projects, Education
   data/         contenu du site (projets, frise, profil)
   router/       définition des routes
-  assets/       styles, images et logos des technologies
+  assets/       styles et images
 ```
