@@ -45,7 +45,7 @@ export const stack = [
   { key: 'back', values: ['Node.js', 'Express', 'PHP', 'API REST'] },
   { key: 'données', values: ['PostgreSQL', 'MongoDB', 'Python (Pandas)'] },
   { key: 'outils', values: ['Git', 'Linux', 'Docker', 'CI/CD'] },
-  { key: 'langages', values: ['JavaScript', 'Python', 'C', 'Java', 'SQL'] }
+  { key: 'langages', values: ['JavaScript', 'Python', 'C', 'SQL'] }
 ]
 
 // Fiche « ~/.config · À côté du code » de l'accueil. Liste vide : fiche masquée.

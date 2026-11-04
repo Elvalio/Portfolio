@@ -1,6 +1,7 @@
 import PortfolioImg from '../assets/Portfolio.webp'
 import MuseImg from '../assets/MUSE.webp'
 import TripImg from '../assets/LPPDT.webp'
+import SoleurImg from '../assets/Soleur.webp'
 
 // Catégories des onglets de filtre de la page Projets, dans l'ordre d'affichage
 export const categories = [
@@ -36,7 +37,7 @@ export const projects = [
     pitch: "Plateforme open source d'agents IA pour fondateurs solo. J'ai contribué à l'application web, à la base Supabase, à la CI/CD et au plugin Claude Code qui orchestre les agents.",
     short: "Plateforme open source d'agents IA pour fondateurs solo.",
     status: 'Terminé',
-    image: null,
+    image: SoleurImg,
     tech: ['Next.js', 'Supabase', 'PostgreSQL', 'Terraform', 'Claude Code'],
     description:
       "Soleur est une plateforme open source qui déploie des agents IA sur les différents pôles d'une entreprise (produit, marketing, juridique, finance…) pour accompagner les fondateurs solo. Pendant mon stage de fin de BUT chez Jikigai, j'ai contribué à l'application web et au plugin Claude Code qui orchestre ces agents, au sein d'une petite équipe travaillant en télétravail.",
