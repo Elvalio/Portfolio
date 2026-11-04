@@ -1,45 +1,37 @@
 <template>
-  <footer class="mt-16 py-12 border-t border-gray-700">
-    <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-        <!-- Contact Info -->
+  <footer class="border-t-2 border-line bg-ink-deep">
+    <div class="mx-auto flex max-w-[1200px] flex-col gap-6 px-4 pb-8 pt-10 sm:px-8">
+      <div class="grid grid-cols-1 gap-7 text-[15px] sm:grid-cols-3">
         <div>
-          <h3 class="text-lg font-bold mb-4">Contact</h3>
-          <div class="space-y-2 text-muted-light text-sm">
-            <p><strong>Email : </strong><a :href="`mailto:${contact.email}`" class="hover:text-primary transition">{{ contact.email }}</a></p>
-            <p><strong>Localisation :</strong> {{ contact.location }}</p>
-            <p><button type="button" @click="openContact" class="hover:text-primary transition">Formulaire de contact</button></p>
-          </div>
+          <h2 class="mb-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted">Nom</h2>
+          <p class="font-display text-xl font-extrabold uppercase">{{ contact.name }}</p>
+          <p class="mt-1 font-mono text-[13px] text-muted-light">{{ contact.location }}</p>
         </div>
 
-        <!-- Liens rapides -->
         <div>
-          <h3 class="text-lg font-bold mb-4">Liens rapides</h3>
-          <div class="space-y-2 text-muted-light text-sm">
-            <div><router-link to="/" class="hover:text-primary transition">Accueil</router-link></div>
-            <div><router-link to="/projects" class="hover:text-primary transition">Projets</router-link></div>
-            <div><router-link to="/education" class="hover:text-primary transition">Formation</router-link></div>
-            <div><a :href="cvUrl" download="CV_Harry_Troule.pdf" class="hover:text-primary transition">Télécharger CV</a></div>
-          </div>
+          <h2 class="mb-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted">Contact</h2>
+          <ul class="flex flex-col gap-1.5 font-mono text-[13px]">
+            <li><a :href="`mailto:${contact.email}`">{{ contact.email }}</a></li>
+            <li><a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">linkedin/harry-troule</a></li>
+            <li><a :href="contact.github" target="_blank" rel="noopener noreferrer">github/Elvalio</a></li>
+            <li>
+              <button type="button" class="text-accent-text transition-colors hover:text-lilac" @click="openContact">./contact.sh</button>
+            </li>
+          </ul>
         </div>
 
-        <!-- Réseaux sociaux -->
         <div>
-          <h3 class="text-lg font-bold mb-4">Réseaux sociaux</h3>
-          <div class="flex gap-4">
-            <a :href="contact.linkedin" target="_blank" rel="noopener noreferrer" class="text-muted-light hover:text-primary transition" aria-label="LinkedIn">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8" aria-hidden="true"><path :d="linkedinPath" /></svg>
-            </a>
-            <a :href="contact.github" target="_blank" rel="noopener noreferrer" class="text-muted-light hover:text-primary transition" aria-label="GitHub">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8" aria-hidden="true"><path :d="githubPath" /></svg>
-            </a>
-          </div>
+          <h2 class="mb-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted">Colophon</h2>
+          <p class="font-mono text-[13px] text-muted-light">
+            build: vue 3 + vite<br />
+            style: tailwind css<br />
+            deploy: github pages
+          </p>
         </div>
       </div>
 
-      <div class="text-center text-sm text-muted-light pt-8 border-t border-gray-800">
-        © {{ new Date().getFullYear() }} {{ contact.name }} — Portfolio
-      </div>
+      <div class="codebarre h-[26px] opacity-50" aria-hidden="true"></div>
+      <p class="font-mono text-xs text-muted">© {{ new Date().getFullYear() }} harry-troule · exit 0</p>
     </div>
   </footer>
 </template>
@@ -47,8 +39,6 @@
 <script setup>
 import { inject } from 'vue'
 import { contact } from '../data/profile.js'
-import { linkedinPath, githubPath } from '../data/icons.js'
 
 const openContact = inject('openContact')
-const cvUrl = import.meta.env.BASE_URL + 'CV.pdf'
 </script>

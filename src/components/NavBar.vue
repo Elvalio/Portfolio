@@ -1,51 +1,72 @@
 <template>
-  <nav
-    class="fixed top-0 left-0 right-0 z-50 py-4 transition-all duration-300"
+  <header
+    class="fixed inset-x-0 top-0 z-50 border-b-2 transition-colors duration-300"
     :style="{
-      opacity: visibleOpacity,
-      pointerEvents: visibleOpacity < 0.1 ? 'none' : 'auto',
-      backgroundColor: `rgba(17, 24, 39, ${visibleOpacity * 0.95})`,
-      backdropFilter: visibleOpacity > 0.3 ? 'blur(10px)' : 'none'
+      backgroundColor: `rgba(11, 10, 30, ${0.94 * solid})`,
+      borderColor: `rgba(58, 51, 145, ${solid})`
     }"
   >
-    <div class="container mx-auto flex items-center justify-between px-4">
-      <router-link to="/" class="text-white font-semibold text-2xl md:text-3xl hover:text-primary transition-colors">&lt;Harry /&gt;</router-link>
+    <div class="mx-auto flex max-w-[1200px] items-center justify-between gap-4 px-4 py-3.5 font-mono text-sm sm:px-8">
+      <router-link to="/" class="inline-flex min-h-[44px] items-center gap-1.5 font-bold text-bg-light hover:text-bg-light">
+        <span>harry@portfolio:<span class="text-accent-text">{{ path }}</span>$</span>
+        <span class="curseur inline-block h-[18px] w-[9px] bg-accent-text" aria-hidden="true"></span>
+      </router-link>
 
       <!-- Liens (écran large) -->
-      <div class="hidden md:flex items-center space-x-4">
-        <router-link v-for="l in links" :key="l.to" :to="l.to" class="text-lg hover:text-primary">{{ l.label }}</router-link>
-        <a :href="cvUrl" download="CV_Harry_Troule.pdf" class="ml-4 inline-block bg-primary text-white px-3 py-1 rounded">Télécharger CV</a>
-      </div>
+      <nav aria-label="Navigation principale" class="hidden md:block">
+        <ul class="flex flex-wrap items-center gap-2.5">
+          <li v-for="l in links" :key="l.to">
+            <router-link :to="l.to" :class="linkClass(l.to)">{{ l.label }}</router-link>
+          </li>
+          <li>
+            <button type="button" :class="linkClass(null)" @click="openContact">./contact.sh</button>
+          </li>
+          <li>
+            <a :href="cvUrl" download="CV_Harry_Troule.pdf" :class="cvClass">cv.pdf ↓</a>
+          </li>
+        </ul>
+      </nav>
 
       <!-- Bouton menu (mobile) -->
       <button
         type="button"
-        class="md:hidden text-white hover:text-primary transition-colors"
+        class="inline-flex min-h-[44px] items-center gap-2 border-2 border-lilac px-3 text-bg-light md:hidden"
+        :class="solid < 0.5 ? 'bg-ink/75' : ''"
         :aria-expanded="menuOpen"
-        aria-controls="mobile-menu"
-        aria-label="Menu"
+        aria-controls="menu-mobile"
         @click="menuOpen = !menuOpen"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-          <path v-if="!menuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <span>{{ menuOpen ? 'fermer' : 'menu' }}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path v-if="!menuOpen" stroke-linecap="square" d="M4 6h16M4 12h16M4 18h16" />
+          <path v-else stroke-linecap="square" d="M6 6l12 12M18 6L6 18" />
         </svg>
       </button>
     </div>
 
     <!-- Menu déroulant (mobile) -->
-    <div v-if="menuOpen" id="mobile-menu" class="md:hidden container mx-auto px-4 pt-4 flex flex-col gap-3">
-      <router-link v-for="l in links" :key="l.to" :to="l.to" class="text-lg hover:text-primary">{{ l.label }}</router-link>
-      <a :href="cvUrl" download="CV_Harry_Troule.pdf" class="self-start bg-primary text-white px-3 py-1 rounded">Télécharger CV</a>
-    </div>
-  </nav>
+    <nav v-if="menuOpen" id="menu-mobile" aria-label="Navigation principale" class="px-4 pb-4 font-mono text-sm md:hidden">
+      <ul class="flex flex-col gap-2.5">
+        <li v-for="l in links" :key="l.to">
+          <router-link :to="l.to" :class="[linkClass(l.to), 'w-full']">{{ l.label }}</router-link>
+        </li>
+        <li>
+          <button type="button" :class="[linkClass(null), 'w-full']" @click="menuOpen = false; openContact()">./contact.sh</button>
+        </li>
+        <li>
+          <a :href="cvUrl" download="CV_Harry_Troule.pdf" :class="[cvClass, 'w-full']">cv.pdf ↓</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
 const props = defineProps({
+  // 0 : posée sur le Hero (transparente) · 1 : barre opaque
   scrollOpacity: {
     type: Number,
     default: 1
@@ -53,16 +74,32 @@ const props = defineProps({
 })
 
 const links = [
-  { to: '/', label: 'Accueil' },
-  { to: '/projects', label: 'Projets' },
-  { to: '/education', label: 'Formation' }
+  { to: '/', label: '~/accueil' },
+  { to: '/projects', label: '~/projets' },
+  { to: '/education', label: '~/formation' }
 ]
 
-const menuOpen = ref(false)
-const route = useRoute()
+// Chemin affiché dans le prompt
+const paths = { '/': '~', '/projects': '~/projets', '/education': '~/formation' }
 
-// Le menu ouvert reste visible même en haut de l'accueil
-const visibleOpacity = computed(() => (menuOpen.value ? 1 : props.scrollOpacity))
+const route = useRoute()
+const openContact = inject('openContact')
+const menuOpen = ref(false)
+
+const path = computed(() => paths[route.path] || '~')
+
+// Le menu ouvert rend la barre opaque, même en haut de l'accueil
+const solid = computed(() => (menuOpen.value ? 1 : props.scrollOpacity))
+
+const baseLink = 'inline-flex min-h-[44px] items-center border-2 px-3.5 py-2 transition-colors'
+
+const linkClass = (to) => {
+  if (to && route.path === to) return `${baseLink} border-lilac bg-primary font-bold text-white hover:text-white`
+  const surHero = solid.value < 0.5
+  return `${baseLink} text-bg-light hover:border-lilac hover:text-bg-light ${surHero ? 'border-lilac bg-ink/75' : 'border-line'}`
+}
+
+const cvClass = `${baseLink} border-lilac bg-bg-light font-bold text-primary-dark shadow-dur-3 hover:text-primary-dark`
 
 // Ferme le menu à chaque changement de page
 watch(() => route.fullPath, () => { menuOpen.value = false })

@@ -1,71 +1,90 @@
-// Frise du parcours, dans l'ordre chronologique.
-// variant : observation | done | experience | active (définit couleurs et badge)
-// icon : eye | school | bolt
+// Frise du parcours, du plus ancien au plus récent, dessinée comme un graphe Git.
+//
+// type  : diplome | observation | experience | en-cours (repère et couleurs)
+// lane  : formation | pro (branche du graphe). La branche « pro » s'ouvre à la
+//         première étape pro et fusionne dans la dernière étape (en cours).
+// code  : numéro de fiche affiché dans l'en-tête
+// commit: ligne façon message de commit
+// stamp : tampon de statut
+// ticker: texte du bandeau défilant de l'accueil (absent : pas dans le bandeau)
 export const timeline = [
   {
-    variant: 'observation',
-    icon: 'eye',
-    badge: 'Observation',
-    title: "Stage d'observation",
-    date: 'Avril 2022 (1 semaine)',
-    place: '🏢 GigaHertz (maintenant LDLC) - Trégueux',
-    skills: [
-      { title: 'Maintenance informatique' },
-      { title: 'Assistance aux ventes' },
-      { title: 'Gestion des contrats' }
-    ]
-  },
-  {
-    variant: 'done',
-    icon: 'school',
-    badge: 'Obtenu',
+    key: 'bac',
+    type: 'diplome',
+    lane: 'formation',
+    code: 'FO-01',
     title: 'Baccalauréat Général',
-    date: '2020 - 2023',
-    place: '🏫 Lycée St Joseph - Lamballe',
-    text: '<strong>Spécialités :</strong> Mathématiques / Numérique et Sciences Informatiques'
+    dates: '2020 → 2023',
+    commit: 'diplôme(lycée): spécialités maths + NSI',
+    text: 'Lycée St Joseph, Lamballe · spécialités Mathématiques et Numérique et Sciences Informatiques.',
+    stamp: 'Obtenu'
   },
   {
-    variant: 'done',
-    icon: 'school',
-    badge: 'Obtenu',
+    key: 'observation',
+    type: 'observation',
+    lane: 'pro',
+    code: 'OB-01',
+    title: "Stage d'observation",
+    dates: 'avril 2022 · 1 semaine',
+    commit: 'observation(GigaHertz): premier pied en entreprise',
+    text: "GigaHertz (aujourd'hui LDLC), Trégueux · maintenance informatique, assistance aux ventes, gestion des contrats.",
+    stamp: 'Effectué'
+  },
+  {
+    key: 'but',
+    type: 'diplome',
+    lane: 'formation',
+    code: 'FO-02',
     title: 'BUT Informatique',
-    date: '2023 - 2026',
-    place: '🏫 IUT de Lannion',
-    text: "Parcours « Réalisation d'applications » en 2ᵉ année, puis « Administration, gestion et exploitation des données » en 3ᵉ année."
+    dates: '2023 → 2026',
+    commit: 'diplôme(IUT Lannion): applications, puis données',
+    text: "IUT de Lannion · parcours « Réalisation d'applications » en 2ᵉ année, puis « Administration, gestion et exploitation des données » en 3ᵉ année.",
+    stamp: 'Obtenu',
+    ticker: 'BUT Informatique · IUT de Lannion · obtenu'
   },
   {
-    variant: 'experience',
-    icon: 'bolt',
-    badge: 'Expérience',
-    title: 'Développeur Web Fullstack',
-    date: 'Juillet 2025 - Août 2025',
-    place: '💼 Unissia | Plérin',
-    skills: [
-      { title: 'Back-End', detail: 'API REST Node.js, Express, MongoDB' },
-      { title: 'Front-End', detail: 'Vue.js, Tailwind CSS, intégration de l’API' },
-      { title: 'Git & GitHub', detail: 'Versionnement, branches, pull requests' }
-    ]
+    key: 'unissia',
+    type: 'experience',
+    lane: 'pro',
+    code: 'EX-01',
+    title: 'Développeur web fullstack · Unissia',
+    dates: 'juillet → août 2025',
+    commit: 'stage(Unissia): Plérin',
+    items: [
+      'API REST avec Node.js, Express et MongoDB',
+      "interfaces Vue.js et Tailwind CSS branchées sur l'API",
+      'travail en branches et pull requests sur GitHub'
+    ],
+    stamp: 'Terminé',
+    ticker: 'stage · Unissia · Plérin · 2025'
   },
   {
-    variant: 'experience',
-    icon: 'bolt',
-    badge: 'Expérience',
-    title: 'Développeur Fullstack — Stage de fin de BUT',
-    date: 'Mai 2026 - Août 2026',
-    place: '💼 Jikigai | Télétravail et coworking',
-    skills: [
-      { title: 'Développement', detail: 'Front-end, back-end, base Supabase et CI/CD sur la plateforme Soleur' },
-      { title: 'Agents IA', detail: 'Plugin Claude Code qui orchestre les agents de Soleur' },
-      { title: 'Méthode', detail: 'Sprints sur Linear, veille et analyse concurrentielle' }
-    ]
+    key: 'jikigai',
+    type: 'experience',
+    lane: 'pro',
+    code: 'EX-02',
+    title: 'Développeur fullstack · Jikigai',
+    dates: 'mai → août 2026',
+    commit: 'stage(Jikigai): fin de BUT · télétravail et coworking',
+    items: [
+      'front, back, base Supabase et CI/CD sur la plateforme Soleur',
+      'plugin Claude Code qui orchestre les agents',
+      'sprints sur Linear, veille et analyse concurrentielle'
+    ],
+    project: 'soleur',
+    stamp: 'Terminé',
+    ticker: 'stage · Jikigai · Soleur · 2026'
   },
   {
-    variant: 'active',
-    icon: 'school',
-    badge: 'En cours',
-    title: 'Master Informatique — M1 ILSEN',
-    date: 'Septembre 2026 - Aujourd’hui',
-    place: '🏫 Avignon Université (CERI)',
-    text: 'Parcours Ingénierie du Logiciel de la Société Numérique.'
+    key: 'm1',
+    type: 'en-cours',
+    lane: 'formation',
+    code: '(HEAD → main)',
+    title: 'Master Informatique · M1 ILSEN',
+    dates: 'sept. 2026 →',
+    commit: 'merge: formation + expériences → master',
+    text: 'Avignon Université (CERI) · parcours Ingénierie du Logiciel de la Société Numérique.',
+    stamp: 'En cours',
+    ticker: 'M1 ILSEN · Avignon Université · en cours'
   }
 ]

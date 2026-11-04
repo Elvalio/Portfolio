@@ -1,84 +1,106 @@
 <template>
-  <!-- Overlay -->
   <Teleport to="body">
-    <Transition name="fade">
-      <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" @click="closeModal" v-if="isOpen"></div>
+    <Transition name="fondu">
+      <div v-if="isOpen" class="fixed inset-0 z-[55] bg-[rgba(5,4,15,0.72)]" aria-hidden="true"></div>
     </Transition>
 
-    <!-- Modal Container -->
-    <Transition name="slide-down">
-      <div class="fixed inset-0 flex items-center justify-center z-50 p-4" @click="closeModal" v-if="isOpen">
-        <div class="rounded-xl border border-gray-700 shadow-2xl overflow-hidden w-full max-w-2xl relative" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));" @click.stop>
-        <!-- Fond avec blur -->
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-        
-        <!-- Contenu -->
-        <div class="relative z-10 max-h-[calc(100dvh-2rem)] overflow-y-auto">
-        <div class="flex items-center justify-between p-6 md:p-8 border-b border-gray-700">
-          <div>
-            <h2 class="text-3xl font-bold text-white">Contactez-moi</h2>
-            <p class="text-sm text-muted-light mt-1">Je réponds généralement sous 48 heures.</p>
-          </div>
-          <button
-            @click="closeModal"
-            class="text-gray-300 hover:text-white transition-colors"
-            aria-label="Fermer"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+    <Transition name="glisse">
+      <div v-if="isOpen" class="fixed inset-0 z-[60] overflow-y-auto px-4 py-16 sm:py-24" @click.self="closeModal">
+        <div
+          ref="dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="titre-contact"
+          class="relative mx-auto mt-7 w-full max-w-[760px]"
+          @keydown="onKeydown"
+        >
+          <span class="absolute -top-[26px] left-4 border-2 border-b-0 border-lilac bg-primary px-3 py-0.5 font-mono text-xs font-bold leading-5 text-white">Fiche CT · nouveau message</span>
 
-        <!-- Form -->
-        <form @submit.prevent="handleSubmit" class="p-6 md:p-8 space-y-4">
-          <div class="grid md:grid-cols-2 gap-4">
-            <label class="block text-sm text-gray-300">
-              Nom complet
-              <input v-model="form.name" type="text" class="mt-1 w-full rounded-lg bg-gray-900 border border-gray-700 px-3 py-2 focus:border-primary focus:ring-primary outline-none" placeholder="John Doe" required />
-            </label>
-            <label class="block text-sm text-gray-300">
-              Email
-              <input v-model="form.email" type="email" class="mt-1 w-full rounded-lg bg-gray-900 border border-gray-700 px-3 py-2 focus:border-primary focus:ring-primary outline-none" placeholder="vous@example.com" required />
-            </label>
-          </div>
+          <div class="border-2 border-lilac bg-surface shadow-dur-12">
+            <!-- Barre de titre -->
+            <div class="flex items-center justify-between gap-3 border-b-2 border-lilac bg-primary-dark px-4 py-2.5 font-mono text-[13px]">
+              <div class="flex min-w-0 items-center gap-2 text-lilac">
+                <span class="h-2.5 w-2.5 flex-none border border-lilac bg-primary" aria-hidden="true"></span>
+                <span class="h-2.5 w-2.5 flex-none border border-lilac bg-muted-light" aria-hidden="true"></span>
+                <span class="h-2.5 w-2.5 flex-none border border-lilac bg-bg-light" aria-hidden="true"></span>
+                <span class="ml-2 truncate">harry@portfolio:~$ ./contact.sh</span>
+              </div>
+              <button
+                type="button"
+                class="inline-flex h-11 w-11 flex-none items-center justify-center border-2 border-lilac text-bg-light"
+                aria-label="Fermer"
+                @click="closeModal"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+              </button>
+            </div>
 
-          <label class="block text-sm text-gray-300">
-            Sujet
-            <input v-model="form.subject" type="text" class="mt-1 w-full rounded-lg bg-gray-900 border border-gray-700 px-3 py-2 focus:border-primary focus:ring-primary outline-none" placeholder="Proposition de projet" required />
-          </label>
+            <div class="flex flex-col gap-6 p-5 sm:p-8">
+              <div>
+                <h2 id="titre-contact" class="font-display text-[40px] font-black uppercase leading-none">Me contacter</h2>
+                <p class="mt-2.5 text-muted-light">Une offre d'alternance, une question sur un projet : je réponds généralement sous 48 heures.</p>
+              </div>
 
-          <label class="block text-sm text-gray-300">
-            Message
-            <textarea v-model="form.message" rows="6" class="mt-1 w-full rounded-lg bg-gray-900 border border-gray-700 px-3 py-2 focus:border-primary focus:ring-primary outline-none" placeholder="Bonjour Harry, ..." required></textarea>
-          </label>
+              <form class="flex flex-col gap-[18px]" novalidate @submit.prevent="handleSubmit">
+                <div class="flex flex-wrap gap-[18px]">
+                  <label class="flex flex-[1_1_260px] flex-col gap-1.5 text-sm text-muted-light">
+                    <span><span class="font-mono text-accent-text">--nom</span>  Nom complet</span>
+                    <input ref="firstField" v-model="form.name" type="text" autocomplete="name" placeholder="Prénom Nom" required :class="fieldClass" />
+                  </label>
+                  <label class="flex flex-[1_1_260px] flex-col gap-1.5 text-sm text-muted-light">
+                    <span><span class="font-mono text-accent-text">--email</span>  Adresse e-mail</span>
+                    <input v-model="form.email" type="email" autocomplete="email" placeholder="vous@entreprise.fr" required :class="fieldClass" />
+                  </label>
+                </div>
+                <label class="flex flex-col gap-1.5 text-sm text-muted-light">
+                  <span><span class="font-mono text-accent-text">--sujet</span>  Sujet</span>
+                  <input v-model="form.subject" type="text" placeholder="Alternance développeur" required :class="fieldClass" />
+                </label>
+                <label class="flex flex-col gap-1.5 text-sm text-muted-light">
+                  <span><span class="font-mono text-accent-text">--message</span>  Message</span>
+                  <textarea v-model="form.message" rows="6" placeholder="Bonjour Harry, …" required :class="[fieldClass, 'resize-y']"></textarea>
+                </label>
 
-          <!-- Piège anti-spam : invisible pour les visiteurs, coché par les robots -->
-          <input v-model="form.botcheck" type="checkbox" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+                <!-- Piège anti-spam : invisible pour les visiteurs, coché par les robots -->
+                <input v-model="form.botcheck" type="checkbox" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
-          <div class="flex flex-col gap-3 pt-4">
-            <button type="submit" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition disabled:opacity-60 font-semibold" :disabled="status === 'loading'">
-              <span v-if="status === 'loading'">Envoi...</span>
-              <span v-else>Envoyer</span>
-            </button>
-            <div class="flex items-center gap-3 justify-center">
-              <span v-if="status === 'success'" class="text-emerald-400 text-sm">✓ Message envoyé!</span>
-              <span v-else-if="status === 'error'" class="text-rose-400 text-sm">{{ feedback }}</span>
+                <div class="flex flex-wrap items-center gap-3.5 font-mono text-sm font-bold">
+                  <button
+                    type="submit"
+                    class="min-h-[48px] border-2 border-bg-light bg-bg-light px-[22px] py-3 text-primary-dark shadow-dur-4 disabled:opacity-60"
+                    :disabled="status === 'loading'"
+                  >envoyer ↵</button>
+                  <button type="button" class="min-h-[48px] border-2 border-line px-[22px] py-3 text-bg-light" @click="closeModal">annuler</button>
+                </div>
+              </form>
+
+              <!-- Sortie du script -->
+              <div class="flex flex-col gap-1 border border-line bg-ink-deep px-4 py-3.5 font-mono text-[13px]" role="status" aria-live="polite">
+                <p v-if="output" :class="output.tone">
+                  {{ output.text }}<template v-if="output.mail"> · écrivez à <a :href="`mailto:${contact.email}`">{{ contact.email }}</a></template>
+                </p>
+                <p class="mt-1 flex items-center gap-1.5" aria-hidden="true">
+                  <span class="text-accent-text">$</span><span class="curseur inline-block h-4 w-2 bg-accent-text"></span>
+                </p>
+              </div>
+
+              <p class="text-sm text-muted-light">
+                Ou directement : <a :href="`mailto:${contact.email}`" class="font-mono">{{ contact.email }}</a>
+                · <a :href="contact.linkedin" target="_blank" rel="noopener noreferrer" class="font-mono">linkedin ↗</a>
+              </p>
             </div>
           </div>
-        </form>
         </div>
-      </div>
       </div>
     </Transition>
   </Teleport>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
 import { contact, web3formsAccessKey } from '../data/profile.js'
 
-defineProps({
+const props = defineProps({
   isOpen: {
     type: Boolean,
     default: false
@@ -86,6 +108,8 @@ defineProps({
 })
 
 const emit = defineEmits(['close'])
+
+const fieldClass = 'min-h-[44px] w-full border-2 border-line bg-ink px-3 py-2.5 text-[15px] text-bg-light placeholder:text-[#7F7BB0]'
 
 const emptyForm = () => ({
   name: '',
@@ -96,9 +120,21 @@ const emptyForm = () => ({
 })
 
 const form = reactive(emptyForm())
+const status = ref('idle') // idle | loading | success | invalid | unavailable | error
 
-const status = ref('idle')
-const feedback = ref('')
+const dialog = ref(null)
+const firstField = ref(null)
+let opener = null
+
+// Ligne affichée dans la sortie du script
+const output = computed(() => ({
+  idle: null,
+  loading: { text: '[..]  envoi en cours…', tone: 'text-muted', mail: false },
+  success: { text: '[ok]  message envoyé · réponse sous 48 h', tone: 'text-lilac', mail: false },
+  invalid: { text: '[err] remplissez les quatre champs, avec une adresse e-mail valide', tone: 'text-lilac', mail: false },
+  unavailable: { text: '[err] formulaire indisponible pour le moment', tone: 'text-lilac', mail: true },
+  error: { text: '[err] envoi impossible', tone: 'text-lilac', mail: true }
+}[status.value]))
 
 const resetForm = () => Object.assign(form, emptyForm())
 
@@ -106,8 +142,52 @@ const closeModal = () => {
   emit('close')
   resetForm()
   status.value = 'idle'
-  feedback.value = ''
 }
+
+// Champs atteignables au clavier dans la fenêtre (pour garder le focus dedans)
+const focusables = () => [...dialog.value.querySelectorAll(
+  'a[href], button:not([disabled]), input:not([tabindex="-1"]), textarea, select'
+)].filter((el) => el.offsetParent !== null)
+
+const onKeydown = (event) => {
+  if (event.key !== 'Tab') return
+  const items = focusables()
+  if (!items.length) return
+  const first = items[0]
+  const last = items[items.length - 1]
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault()
+    last.focus()
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault()
+    first.focus()
+  }
+}
+
+const onEscape = (event) => {
+  if (event.key === 'Escape') closeModal()
+}
+
+watch(() => props.isOpen, async (open) => {
+  if (open) {
+    opener = document.activeElement
+    document.addEventListener('keydown', onEscape)
+    document.body.style.overflow = 'hidden'
+    await nextTick()
+    firstField.value?.focus()
+  } else {
+    document.removeEventListener('keydown', onEscape)
+    document.body.style.overflow = ''
+    // Rend le focus au bouton qui a ouvert la fenêtre
+    if (opener && document.contains(opener)) opener.focus()
+    opener = null
+  }
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', onEscape)
+  document.body.style.overflow = ''
+})
 
 const showSuccess = () => {
   status.value = 'success'
@@ -118,9 +198,9 @@ const showSuccess = () => {
 const handleSubmit = async () => {
   if (status.value === 'loading') return
 
-  if (!form.name.trim() || !form.email.trim() || !form.subject.trim() || !form.message.trim()) {
-    status.value = 'error'
-    feedback.value = 'Merci de remplir tous les champs.'
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())
+  if (!form.name.trim() || !emailOk || !form.subject.trim() || !form.message.trim()) {
+    status.value = 'invalid'
     return
   }
 
@@ -132,13 +212,11 @@ const handleSubmit = async () => {
 
   // Sans clé Web3Forms, on renvoie vers l'adresse mail directement
   if (!web3formsAccessKey) {
-    status.value = 'error'
-    feedback.value = `Le formulaire est indisponible pour le moment. Écrivez-moi directement à ${contact.email}.`
+    status.value = 'unavailable'
     return
   }
 
   status.value = 'loading'
-  feedback.value = ''
 
   try {
     const response = await fetch('https://api.web3forms.com/submit', {
@@ -159,46 +237,30 @@ const handleSubmit = async () => {
     showSuccess()
   } catch (err) {
     status.value = 'error'
-    feedback.value = `Erreur lors de l'envoi. Vous pouvez m'écrire directement à ${contact.email}.`
     console.error('Erreur Web3Forms', err)
   }
 }
 </script>
 
 <style scoped>
-.slide-down-enter-active,
-.slide-down-leave-active {
-  transition: all 0.4s ease;
+.fondu-enter-active,
+.fondu-leave-active {
+  transition: opacity 0.25s ease;
 }
 
-.slide-down-enter-from {
-  opacity: 0;
-  transform: translateY(-30px);
-}
-
-.slide-down-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.slide-down-enter-to,
-.slide-down-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.4s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
+.fondu-enter-from,
+.fondu-leave-to {
   opacity: 0;
 }
 
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
+.glisse-enter-active,
+.glisse-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.glisse-enter-from,
+.glisse-leave-to {
+  opacity: 0;
+  transform: translateY(-16px);
 }
 </style>

@@ -1,107 +1,198 @@
 <template>
-  <section class="py-10 min-h-[calc(100vh-120px)]">
-    <div class="mb-8">
-      <h2 class="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Projets</h2>
-      <p class="text-muted-light">Sélection de réalisations académiques, professionnelles et personnelles</p>
+  <div class="mx-auto flex max-w-[1200px] flex-col gap-16 px-4 pb-28 pt-[72px] sm:px-8">
+    <!-- En-tête de page -->
+    <section class="flex flex-col gap-[18px]">
+      <PromptLabel code="Dossier PR" cmd="ls -la ~/projets" />
+      <h1 class="titre-page font-display text-[clamp(56px,7vw,96px)] font-black uppercase leading-[0.95]">Projets</h1>
+      <p class="max-w-[640px] text-lg text-muted-light">Ce que j'ai construit en stage, à l'université et pour moi. Chaque fiche renvoie vers le code.</p>
+    </section>
+
+    <!-- Index façon ls -la -->
+    <div class="overflow-x-auto border-2 border-lilac bg-surface shadow-dur-8">
+      <table class="w-full min-w-[760px] border-collapse font-mono text-sm">
+        <caption class="border-b-2 border-lilac bg-primary-dark px-5 py-3 text-left text-xs text-lilac">total {{ projects.length }}</caption>
+        <thead>
+          <tr class="text-left text-xs uppercase tracking-[0.08em] text-muted">
+            <th scope="col" class="border-b border-line px-5 py-3 font-normal">droits</th>
+            <th scope="col" class="border-b border-line px-5 py-3 font-normal">année</th>
+            <th scope="col" class="border-b border-line px-5 py-3 font-normal">nom</th>
+            <th scope="col" class="border-b border-line px-5 py-3 font-normal">cadre</th>
+            <th scope="col" class="border-b border-line px-5 py-3 font-normal">statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="p in projects" :key="p.key" :class="p.key === activeKey ? 'bg-primary/20' : ''">
+            <td class="px-5 py-3 text-muted">{{ p.kind === 'dir' ? 'drwxr-xr-x' : '-rwxr-xr-x' }}</td>
+            <td class="px-5 py-3">{{ p.year }}</td>
+            <td class="px-5 py-3 font-bold">
+              <router-link :to="{ name: 'Projects', query: { project: p.key } }" :aria-current="p.key === activeKey ? 'true' : undefined">{{ p.slug }}{{ p.kind === 'dir' ? '/' : '' }}</router-link>
+              <span v-if="p.key === activeKey" class="text-lilac"> ← ouvert</span>
+            </td>
+            <td class="px-5 py-3 text-muted-light">{{ p.cadre }}</td>
+            <td class="px-5 py-3" :class="p.status === 'En production' ? 'text-lilac' : ''">{{ p.status.toLowerCase() }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <!-- Aperçu des projets -->
-    <div class="mb-10">
-      <h3 class="text-xl font-semibold text-white mb-4">Aperçu</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <ProjectCard v-for="p in projects" :key="p.key" :project="p" @select="goToDetail" />
+    <!-- Onglets de dossier (filtre) + fiches -->
+    <section>
+      <h2 class="sr-only">Fiches des projets</h2>
+      <div role="tablist" aria-label="Filtrer les projets" class="flex flex-wrap gap-1.5 pl-3 font-mono text-sm font-bold">
+        <button
+          v-for="(t, i) in tabs"
+          :id="`onglet-${t.key}`"
+          :key="t.key"
+          :ref="(el) => (tabRefs[i] = el)"
+          type="button"
+          role="tab"
+          :aria-selected="filter === t.key"
+          aria-controls="panneau-projets"
+          :tabindex="filter === t.key ? 0 : -1"
+          class="min-h-[44px] border-2 px-[18px] py-2"
+          :class="filter === t.key
+            ? '-mb-[2px] border-lilac border-b-surface bg-surface text-bg-light'
+            : 'border-line border-b-0 bg-primary-dark text-muted-light'"
+          @click="filter = t.key"
+          @keydown="onTabKeydown($event, i)"
+        >{{ t.label }} ({{ t.count }})</button>
       </div>
-    </div>
+      <div
+        id="panneau-projets"
+        role="tabpanel"
+        :aria-labelledby="`onglet-${filter}`"
+        class="grid grid-cols-1 gap-x-8 gap-y-11 border-2 border-lilac bg-surface px-5 pb-12 pt-10 sm:grid-cols-2 sm:px-8 lg:grid-cols-3"
+      >
+        <ProjectCard v-for="p in filtered" :key="p.key" :project="p" :index="projects.indexOf(p)" />
+      </div>
+    </section>
 
-    <!-- Détail du projet sélectionné -->
-    <div class="space-y-10 scroll-mt-24" ref="detailSection">
-      <div v-if="activeProject" class="rounded-xl border border-gray-700 bg-gray-800/40 p-6 md:p-8">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <h3 class="text-2xl md:text-3xl font-bold text-white">{{ activeProject.title }}</h3>
-            <p class="text-sm text-muted-light">{{ activeProject.subtitle }}</p>
+    <!-- Fiche ouverte : README du projet -->
+    <section v-if="activeProject" :id="`fiche-${activeProject.key}`" ref="detailSection" class="scroll-mt-28" :aria-labelledby="`titre-${activeProject.key}`">
+      <Fiche
+        tag="div"
+        :tab="`$ cat projets/${activeProject.slug}/README.md`"
+        tab-tone="primary"
+        shadow="primary"
+        :shadow-size="10"
+        :stamp="stampOf(activeProject).label"
+        :stamp-tone="stampOf(activeProject).tone"
+        stamp-size="lg"
+        stamp-class="-bottom-5 right-6 sm:right-10"
+      >
+        <div class="flex flex-wrap items-end justify-between gap-4 border-b-2 border-lilac bg-primary-dark px-5 py-6 sm:px-8">
+          <div class="min-w-0">
+            <h2 :id="`titre-${activeProject.key}`" class="font-display text-[clamp(34px,4vw,44px)] font-black uppercase leading-none">{{ activeProject.title }}</h2>
+            <p class="mt-1.5 text-muted-light">{{ activeProject.subtitle }}</p>
           </div>
-          <div class="flex flex-wrap items-center gap-3">
-            <span :class="statusStyles[activeProject.status]" class="px-3 py-1 rounded-full text-sm border">{{ activeProject.status }}</span>
+          <div class="flex flex-wrap gap-3 font-mono text-sm font-bold">
             <a
               v-if="activeProject.repo"
               :href="activeProject.repo"
               target="_blank"
               rel="noopener noreferrer"
-              class="px-4 py-2 rounded-lg border border-primary/40 text-primary hover:bg-primary/10 transition-colors"
-            >Voir le code</a>
+              class="inline-flex min-h-[44px] items-center border-2 border-bg-light bg-bg-light px-4 py-2 text-primary-dark shadow-dur-3 hover:text-primary-dark"
+            >git clone ↗</a>
+            <button type="button" class="min-h-[44px] border-2 border-lilac px-4 py-2 text-bg-light" @click="closeDetail">fermer ✕</button>
           </div>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="md:col-span-2 space-y-4">
-            <p class="text-gray-300">{{ activeProject.description }}</p>
-            <div v-for="section in activeProject.sections" :key="section.title">
-              <h4 class="font-semibold text-white mb-2">{{ section.title }}</h4>
-              <ul class="list-disc list-inside text-gray-300 space-y-1">
-                <li v-for="item in section.items" :key="item">{{ item }}</li>
+        <div class="flex flex-wrap gap-10 p-5 sm:p-8">
+          <div class="flex min-w-0 flex-[2_1_520px] flex-col gap-[22px]">
+            <img v-if="activeProject.image" :src="activeProject.image" :alt="`Capture de ${activeProject.title}`" class="block max-h-[360px] w-full border-2 border-line object-cover" />
+            <div v-else class="flex h-[260px] items-center justify-center border-2 border-dashed border-line bg-ink font-display text-5xl font-black uppercase text-line" aria-hidden="true">{{ activeProject.title }}</div>
+            <p class="text-muted-light">{{ activeProject.description }}</p>
+            <div>
+              <p class="mb-2.5 font-mono text-[13px] text-muted"><span class="text-accent-text">$</span> git log --author=harry --oneline</p>
+              <ul class="flex flex-col gap-2 border border-line bg-ink px-5 py-4 font-mono text-sm">
+                <li v-for="item in contributions" :key="item"><span class="text-accent-text" aria-hidden="true">+</span> {{ item }}</li>
               </ul>
             </div>
           </div>
-          <div>
-            <h4 class="font-semibold text-white mb-3">Stack</h4>
-            <div class="flex flex-wrap gap-2">
-              <span v-for="t in activeProject.tech" :key="t" class="px-3 py-1 rounded-full bg-gray-800/60 border border-gray-700 text-gray-300 text-sm">
-                {{ t }}
-              </span>
+
+          <aside class="flex min-w-0 flex-[1_1_280px] flex-col gap-6 font-mono text-sm">
+            <div>
+              <h3 class="mb-2.5 text-xs font-bold uppercase tracking-[0.1em] text-muted">Stack</h3>
+              <TagList :items="activeProject.tech" />
             </div>
-            <div v-if="activeProject.aside" class="mt-6">
-              <h4 class="font-semibold text-white mb-2">{{ activeProject.aside.title }}</h4>
-              <p class="text-gray-300 text-sm">{{ activeProject.aside.text }}</p>
-            </div>
-          </div>
+            <dl class="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-3.5 gap-y-2">
+              <template v-for="fact in activeProject.facts" :key="fact.key">
+                <dt class="text-accent-text">{{ fact.key }}:</dt>
+                <dd>{{ fact.value }}</dd>
+              </template>
+              <dt class="text-accent-text">année:</dt>
+              <dd>{{ activeProject.year }}</dd>
+              <dt class="text-accent-text">statut:</dt>
+              <dd>{{ activeProject.status.toLowerCase() }}</dd>
+            </dl>
+          </aside>
         </div>
-      </div>
-    </div>
-  </section>
+      </Fiche>
+    </section>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProjectCard from '../components/ProjectCard.vue'
-import { projects, statusStyles } from '../data/projects.js'
+import Fiche from '../components/Fiche.vue'
+import TagList from '../components/TagList.vue'
+import PromptLabel from '../components/PromptLabel.vue'
+import { projects, categories, statusStamps } from '../data/projects.js'
 
 const route = useRoute()
 const router = useRouter()
 const detailSection = ref(null)
 const activeKey = ref(null)
+const filter = ref('tous')
+const tabRefs = []
 
-const activeProject = computed(() => projects.find((p) => p.key === activeKey.value) || null)
 const validKeys = new Set(projects.map((p) => p.key))
+const activeProject = computed(() => projects.find((p) => p.key === activeKey.value) || null)
+const contributions = computed(() => activeProject.value?.sections.flatMap((s) => s.items) || [])
+const stampOf = (p) => statusStamps[p.status] || { label: p.status, tone: 'default' }
+
+// Onglets de filtre, avec le nombre de projets de chaque catégorie
+const tabs = [
+  { key: 'tous', label: 'tous', count: projects.length },
+  ...categories.map((c) => ({ key: c.key, label: c.label, count: projects.filter((p) => p.category === c.key).length }))
+]
+
+const filtered = computed(() => (filter.value === 'tous' ? projects : projects.filter((p) => p.category === filter.value)))
+
+// Flèches, Début et Fin déplacent la sélection entre les onglets
+const onTabKeydown = (event, i) => {
+  const moves = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }
+  if (!(event.key in moves)) return
+  event.preventDefault()
+  const next = (moves[event.key] + tabs.length) % tabs.length
+  filter.value = tabs[next].key
+  tabRefs[next]?.focus()
+}
 
 const scrollToDetail = () => {
-  if (detailSection.value) {
-    detailSection.value.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  detailSection.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
-// Ouvre la fiche et met à jour l'URL pour permettre les liens directs
-function goToDetail(key) {
-  if (!validKeys.has(key)) return
-  if (route.query.project !== key) {
-    router.push({ name: 'Projects', query: { ...route.query, project: key } })
-  }
-  activeKey.value = key
-  nextTick(scrollToDetail)
-}
-
-const hydrateFromQuery = (key) => {
+// Ouvre la fiche demandée par l'URL (?project=…), qui sert aussi de lien direct
+const hydrateFromQuery = (key, delay) => {
   if (validKeys.has(key)) {
     activeKey.value = key
-    // Laisse la transition de page se terminer avant de défiler
-    setTimeout(scrollToDetail, 500)
+    // Au premier affichage, laisse la transition de page se terminer avant de défiler
+    if (delay) setTimeout(scrollToDetail, delay)
+    else nextTick(scrollToDetail)
   } else {
     activeKey.value = null
   }
 }
 
-onMounted(() => hydrateFromQuery(route.query.project))
+const closeDetail = () => {
+  const { project, ...rest } = route.query
+  router.push({ name: 'Projects', query: rest })
+}
+
+onMounted(() => hydrateFromQuery(route.query.project, 500))
 
 watch(() => route.query.project, (key) => {
   if (key !== activeKey.value) hydrateFromQuery(key)
