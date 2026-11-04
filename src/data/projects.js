@@ -142,7 +142,7 @@ export const projects = [
           'Page d’accueil plein écran, navigation qui apparaît au défilement',
           'Frise chronologique de la formation et des expériences',
           'Fiches projets accessibles par lien direct',
-          'Formulaire de contact (EmailJS)'
+          'Formulaire de contact (Web3Forms)'
         ]
       }
     ],

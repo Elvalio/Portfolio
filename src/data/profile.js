@@ -7,6 +7,12 @@ export const contact = {
   github: 'https://github.com/Elvalio'
 }
 
+// Clé d'accès Web3Forms du formulaire de contact, à obtenir sur
+// https://web3forms.com (elle est envoyée par mail à l'adresse saisie).
+// Elle est publique par conception : elle permet seulement d'envoyer des
+// messages vers cette adresse. Vide, le formulaire invite à écrire par mail.
+export const web3formsAccessKey = ''
+
 export const skills = [
   { icon: '🎨', title: 'Front-end', detail: 'Vue.js, Tailwind CSS, HTML/CSS/JS' },
   { icon: '⚙️', title: 'Back-end', detail: 'Node.js, Express, PHP, API REST' },

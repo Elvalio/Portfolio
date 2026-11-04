@@ -9,7 +9,7 @@ Site personnel présentant mon parcours, mes compétences et mes projets. Dével
 - **Accueil** — présentation, projets mis en avant et compétences
 - **Projets** — fiches détaillées des réalisations, accessibles par lien direct (`/projects?project=soleur`)
 - **Formation** — formation et expériences, sous forme de frise chronologique
-- **Contact** — formulaire (EmailJS) accessible depuis l'accueil et le pied de page
+- **Contact** — formulaire (Web3Forms) accessible depuis l'accueil et le pied de page
 
 ## Stack
 
@@ -19,7 +19,7 @@ Site personnel présentant mon parcours, mes compétences et mes projets. Dével
 | Build | Vite 5 |
 | Styles | Tailwind CSS, PostCSS |
 | Routage | Vue Router 4 |
-| Formulaire de contact | EmailJS |
+| Formulaire de contact | Web3Forms |
 
 ## Installation
 
@@ -41,13 +41,13 @@ Le contenu est séparé de la mise en page, dans `src/data/` :
 
 - `projects.js` — liste des projets (le champ `featured` les affiche sur l'accueil)
 - `timeline.js` — étapes de la frise Formation
-- `profile.js` — coordonnées, liens et compétences
+- `profile.js` — coordonnées, liens, compétences et clé du formulaire de contact
 
 Le CV téléchargeable est `public/CV.pdf`.
 
 ## Formulaire de contact
 
-Le formulaire utilise EmailJS. En local, copier `.env.example` en `.env` et renseigner les trois clés. Pour le site en ligne, les mêmes clés doivent être ajoutées comme secrets du dépôt (Settings > Secrets and variables > Actions) : `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY`. Sans ces clés, le formulaire invite à écrire directement par mail.
+Le formulaire envoie les messages via [Web3Forms](https://web3forms.com), sans bibliothèque ni configuration au build. La clé d'accès s'obtient sur leur site en saisissant l'adresse qui doit recevoir les messages, puis se colle dans `web3formsAccessKey` (`src/data/profile.js`). Cette clé est publique par conception : elle permet seulement d'envoyer des messages vers cette adresse. Sans clé, le formulaire invite à écrire directement par mail.
 
 ## Déploiement
 
