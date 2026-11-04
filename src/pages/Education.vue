@@ -4,9 +4,9 @@
       <!-- Header -->
       <div class="mb-12 text-center">
         <h2 class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-purple-400 to-primary bg-clip-text text-transparent">Mon Parcours</h2>
-        <p class="text-muted-light text-lg">Une chronologie de ma formation et expériences professionnelles</p>
+        <p class="text-muted-light text-lg">Une chronologie de ma formation et de mes expériences professionnelles</p>
       </div>
-      
+
       <!-- Vertical Timeline -->
       <div class="relative">
         <!-- Central Timeline Line -->
@@ -14,160 +14,43 @@
 
         <!-- Timeline Items Container - Vertical Layout -->
         <div class="space-y-12 relative">
-          
-          <!-- Item 1: Stage Observation (Left) -->
-          <div class="timeline-item timeline-left">
+          <div
+            v-for="(item, index) in timeline"
+            :key="item.title"
+            class="timeline-item"
+            :class="index % 2 === 0 ? 'timeline-left' : 'timeline-right'"
+          >
             <!-- Timeline Dot -->
             <div class="timeline-marker">
-              <div class="marker-dot"></div>
+              <div class="marker-dot" :class="variants[item.variant].marker"></div>
             </div>
 
             <!-- Card -->
-            <div class="timeline-card group w-full md:w-96">
+            <div class="timeline-card group w-full md:w-96" :class="variants[item.variant].card">
               <!-- Header with Icon and Badge -->
               <div class="flex items-start gap-4 mb-4">
-                <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                <div class="w-12 h-12 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0" :class="variants[item.variant].iconBg">
+                  <svg class="w-6 h-6" :class="variants[item.variant].color" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path v-for="d in icons[item.icon]" :key="d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="d"/>
                   </svg>
                 </div>
-                <div class="badge" style="background: rgba(168, 85, 247, 0.2); color: rgb(192, 132, 252); border-color: rgba(168, 85, 247, 0.4);">Observation</div>
+                <div class="badge" :class="variants[item.variant].badge" :style="variants[item.variant].badgeStyle">{{ item.badge }}</div>
               </div>
 
               <!-- Content -->
-              <h3 class="text-2xl font-bold text-white mb-2">Stage d'Observation</h3>
-              <p class="text-purple-400 font-semibold mb-1 text-base">Avril 2022 (1 semaine)</p>
-              <p class="text-sm text-muted-light mb-3">🏢 GigaHertz (maintenant LDLC) - Trégueux</p>
-              
-              <!-- Skills Grid -->
-              <div class="space-y-2">
-                <div class="skill-item">
-                  <p class="text-xs font-semibold text-white/90 flex items-center gap-2 mb-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-                    Maintenance informatique
-                  </p>
-                </div>
-                
-                <div class="skill-item">
-                  <p class="text-xs font-semibold text-white/90 flex items-center gap-2 mb-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-                    Assistance aux ventes
-                  </p>
-                </div>
-                
-                <div class="skill-item">
-                  <p class="text-xs font-semibold text-white/90 flex items-center gap-2 mb-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-                    Gestion des contrats
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Item 2: Baccalauréat (Right) -->
-          <div class="timeline-item timeline-right">
-            <!-- Timeline Dot -->
-            <div class="timeline-marker">
-              <div class="marker-dot"></div>
-            </div>
-
-            <!-- Card -->
-            <div class="timeline-card group w-full md:w-96">
-              <!-- Header with Icon and Badge -->
-              <div class="flex items-start gap-4 mb-4">
-                <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C6.5 6.253 2 10.998 2 17.001C2 20.31 3.1 23.3 4.972 25.5C6.844 27.7 9.522 29 12 29c2.478 0 5.156-1.3 7.028-3.5C20.9 23.3 22 20.31 22 17.001c0-6.003-4.5-10.748-10-10.748z"/>
-                  </svg>
-                </div>
-                <div class="badge">Complété</div>
-              </div>
-
-              <!-- Content -->
-              <h3 class="text-2xl font-bold text-white mb-2">Baccalauréat Général</h3>
-              <p class="text-amber-400 font-semibold mb-1 text-base">2020 - 2023</p>
-              <p class="text-sm text-muted-light mb-3">🏫 Lycée St Joseph - Lamballe</p>
-              <p class="text-sm text-gray-300"><strong>Spécialités :</strong> Mathématiques / Numériques et Sciences de l'Informatique</p>
-            </div>
-          </div>
-
-          <!-- Item 3: Bachelor (Left) -->
-          <div class="timeline-item timeline-left">
-            <!-- Timeline Dot -->
-            <div class="timeline-marker">
-              <div class="marker-dot active"></div>
-            </div>
-
-            <!-- Card -->
-            <div class="timeline-card active group w-full md:w-96">
-              <!-- Header with Icon and Badge -->
-              <div class="flex items-start gap-4 mb-4">
-                <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C6.5 6.253 2 10.998 2 17.001C2 20.31 3.1 23.3 4.972 25.5C6.844 27.7 9.522 29 12 29c2.478 0 5.156-1.3 7.028-3.5C20.9 23.3 22 20.31 22 17.001c0-6.003-4.5-10.748-10-10.748z"/>
-                  </svg>
-                </div>
-                <div class="badge active">En cours</div>
-              </div>
-
-              <!-- Content -->
-              <h3 class="text-2xl font-bold text-white mb-2">Bachelor Universitaire de Technologie</h3>
-              <p class="text-primary font-semibold mb-1 text-base">Septembre 2023 - Aujourd'hui</p>
-              <p class="text-sm text-muted-light mb-3">🏫 IUT de Lannion</p>
-              <p class="text-sm text-gray-300 leading-relaxed">BUT Informatique - Formation généraliste en développement et administration de systèmes</p>
-            </div>
-          </div>
-
-          <!-- Item 4: Stage Unissia (Right) -->
-          <div class="timeline-item timeline-right">
-            <!-- Timeline Dot -->
-            <div class="timeline-marker">
-              <div class="marker-dot highlight"></div>
-            </div>
-
-            <!-- Card -->
-            <div class="timeline-card highlight group w-full md:w-96">
-              <!-- Header with Icon and Badge -->
-              <div class="flex items-start gap-4 mb-4">
-                <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                  </svg>
-                </div>
-                <div class="badge highlight">Expérience</div>
-              </div>
-
-              <!-- Content -->
-              <h3 class="text-2xl font-bold text-white mb-2">Développeur Web Fullstack</h3>
-              <p class="text-blue-400 font-semibold mb-1 text-base">Juillet 2025 - Août 2025</p>
-              <p class="text-sm text-muted-light mb-3">💼 Unissia | Plérin</p>
+              <h3 class="text-2xl font-bold text-white mb-2">{{ item.title }}</h3>
+              <p class="font-semibold mb-1 text-base" :class="variants[item.variant].color">{{ item.date }}</p>
+              <p class="text-sm text-muted-light mb-3">{{ item.place }}</p>
+              <p v-if="item.text" class="text-sm text-gray-300 leading-relaxed" v-html="item.text"></p>
 
               <!-- Skills Grid -->
-              <div class="space-y-2">
-                <div class="skill-item">
+              <div v-if="item.skills" class="space-y-2">
+                <div v-for="skill in item.skills" :key="skill.title" class="skill-item">
                   <p class="text-xs font-semibold text-white/90 flex items-center gap-2 mb-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                    Back-End
+                    <span class="w-1.5 h-1.5 rounded-full" :class="variants[item.variant].dot"></span>
+                    {{ skill.title }}
                   </p>
-                  <p class="text-xs text-muted-light leading-tight">API REST Node.js, Express, MongoDB</p>
-                </div>
-                
-                <div class="skill-item">
-                  <p class="text-xs font-semibold text-white/90 flex items-center gap-2 mb-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                    Front-End
-                  </p>
-                  <p class="text-xs text-muted-light leading-tight">Vue.js, Tailwind CSS, API Integration</p>
-                </div>
-                
-                <div class="skill-item">
-                  <p class="text-xs font-semibold text-white/90 flex items-center gap-2 mb-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                    Git & GitHub
-                  </p>
-                  <p class="text-xs text-muted-light leading-tight">Versioning, Branches, Pull Requests</p>
+                  <p v-if="skill.detail" class="text-xs text-muted-light leading-tight">{{ skill.detail }}</p>
                 </div>
               </div>
             </div>
@@ -179,7 +62,60 @@
 </template>
 
 <script setup>
-// No wheel event handling - normal scroll behavior
+import { timeline } from '../data/timeline.js'
+
+// Couleurs et classes associées à chaque type d'étape
+const variants = {
+  observation: {
+    color: 'text-purple-400',
+    dot: 'bg-purple-400',
+    iconBg: 'from-purple-500/20 to-purple-500/10',
+    marker: '',
+    card: '',
+    badge: '',
+    badgeStyle: 'background: rgba(168, 85, 247, 0.2); color: rgb(192, 132, 252); border-color: rgba(168, 85, 247, 0.4);'
+  },
+  done: {
+    color: 'text-amber-400',
+    dot: 'bg-amber-400',
+    iconBg: 'from-amber-500/20 to-amber-500/10',
+    marker: '',
+    card: '',
+    badge: '',
+    badgeStyle: ''
+  },
+  experience: {
+    color: 'text-blue-400',
+    dot: 'bg-blue-400',
+    iconBg: 'from-blue-500/20 to-blue-500/10',
+    marker: 'highlight',
+    card: 'highlight',
+    badge: 'highlight',
+    badgeStyle: ''
+  },
+  active: {
+    color: 'text-primary',
+    dot: 'bg-primary',
+    iconBg: 'from-primary/30 to-primary/10',
+    marker: 'active',
+    card: 'active',
+    badge: 'active',
+    badgeStyle: ''
+  }
+}
+
+// Tracés des icônes (Heroicons, viewBox 24x24)
+const icons = {
+  eye: [
+    'M15 12a3 3 0 11-6 0 3 3 0 016 0z',
+    'M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'
+  ],
+  school: [
+    'M12 14l9-5-9-5-9 5 9 5z',
+    'M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z'
+  ],
+  bolt: ['M13 10V3L4 14h7v7l9-11h-7z']
+}
 </script>
 
 <style scoped>
@@ -217,6 +153,14 @@
 
 .timeline-item:nth-child(4) {
   animation-delay: 0.4s;
+}
+
+.timeline-item:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.timeline-item:nth-child(6) {
+  animation-delay: 0.6s;
 }
 
 @keyframes fadeInScale {
