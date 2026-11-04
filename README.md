@@ -55,7 +55,7 @@ Le formulaire envoie les messages via [Web3Forms](https://web3forms.com), sans b
 
 ## Déploiement
 
-Chaque push sur `main` déclenche le workflow `.github/workflows/deploy.yml` : build Vite puis publication du dossier `dist/` sur la branche `gh-pages`.
+Chaque push sur `main` déclenche le workflow `.github/workflows/deploy.yml` : build Vite, puis publication du dossier `dist/` par GitHub Actions (source Pages du dépôt : « GitHub Actions »).
 
 Le site étant servi depuis un sous-chemin, la base est fixée à `/Portfolio/` dans `vite.config.js`. Le build copie `index.html` en `404.html` pour que les liens directs vers une page (`/Portfolio/projects`) fonctionnent sur GitHub Pages.
 
