@@ -22,16 +22,14 @@
         <div class="mx-auto w-fit">
           <div class="rounded-full p-1 bg-gradient-to-tr from-primary to-primary-dark inline-block">
             <div class="rounded-full overflow-hidden w-36 h-36 md:w-44 md:h-44 bg-transparent shadow-2xl">
-              <img :src="profileUrl" alt="Photo de Harry Troulé" class="w-full h-full object-cover" width="176" height="176" />
+              <img :src="profileUrl" :alt="t('hero.photo')" class="w-full h-full object-cover" width="176" height="176" />
             </div>
           </div>
         </div>
 
         <h1 class="text-5xl md:text-7xl font-extrabold text-white mt-8">{{ contact.name }}</h1>
-        <p class="text-xl md:text-2xl text-gray-200 mt-4">Étudiant en Master Informatique (ILSEN) — Avignon Université</p>
-        <p class="text-md md:text-lg text-gray-300 mt-6 max-w-2xl mx-auto">
-          Développeur fullstack, formé aussi à l'exploitation des données
-        </p>
+        <p class="text-xl md:text-2xl text-gray-200 mt-4">{{ t('hero.subtitle') }}</p>
+        <p class="text-md md:text-lg text-gray-300 mt-6 max-w-2xl mx-auto">{{ t('hero.tagline') }}</p>
 
         <!-- Icônes réseaux sociaux -->
         <div class="mt-8 flex justify-center gap-6">
@@ -45,11 +43,11 @@
 
         <!-- Flèche cliquable avec texte -->
         <div class="mt-16">
-          <p class="text-gray-300 text-sm mb-4 animate-pulse motion-reduce:animate-none">Défilez pour découvrir</p>
+          <p class="text-gray-300 text-sm mb-4 animate-pulse motion-reduce:animate-none">{{ t('hero.scroll') }}</p>
           <button
             @click="scrollToContent"
             class="animate-bounce motion-reduce:animate-none text-white hover:text-accent-text transition-colors cursor-pointer"
-            aria-label="Défiler vers le contenu"
+            :aria-label="t('hero.scrollLabel')"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -67,10 +65,10 @@
         <!-- Fiche 00 · whoami -->
         <section class="flex flex-wrap items-start gap-12">
           <div class="flex min-w-0 flex-[1_1_560px] flex-col gap-[22px]">
-            <PromptLabel code="Fiche 00" cmd="whoami" />
-            <h2 class="titre-page font-display text-[clamp(40px,5.4vw,72px)] font-black uppercase leading-[0.98] tracking-[-0.01em]">{{ whoami.title }}</h2>
-            <p class="max-w-[620px] text-lg text-muted-light">{{ whoami.text }}</p>
-            <p v-if="whoami.extra" class="max-w-[620px] text-muted-light">{{ whoami.extra }}</p>
+            <PromptLabel :code="`${t('common.file')} 00`" cmd="whoami" />
+            <h2 class="titre-page font-display text-[clamp(40px,5.4vw,72px)] font-black uppercase leading-[0.98] tracking-[-0.01em]">{{ tr(whoami.title) }}</h2>
+            <p class="max-w-[620px] text-lg text-muted-light">{{ tr(whoami.text) }}</p>
+            <p v-if="tr(whoami.extra)" class="max-w-[620px] text-muted-light">{{ tr(whoami.extra) }}</p>
           </div>
 
           <Fiche
@@ -78,15 +76,15 @@
             tab="profil.yml"
             class="min-w-0 flex-[1_1_340px]"
             shadow="primary"
-            :stamp="search.open ? 'Ouvert' : ''"
+            :stamp="search.open ? stampOpen : ''"
             stamp-size="lg"
             :stamp-rotate="-7"
             stamp-class="-bottom-5 -right-2 sm:-right-3.5"
           >
             <dl class="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-4 gap-y-3 px-5 py-[22px] font-mono text-sm">
-              <template v-for="row in profileYml" :key="row.key">
-                <dt class="text-accent-text">{{ row.key }}:</dt>
-                <dd>{{ row.value }}</dd>
+              <template v-for="(row, i) in profileYml" :key="i">
+                <dt class="text-accent-text">{{ tr(row.key) }}:</dt>
+                <dd>{{ tr(row.value) }}</dd>
               </template>
               <dt class="text-accent-text">contact:</dt>
               <dd class="break-words"><a :href="`mailto:${contact.email}`">{{ contact.email }}</a></dd>
@@ -98,10 +96,10 @@
         <section class="flex flex-col gap-11 border-t-2 border-dashed border-line pt-14">
           <div class="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <PromptLabel code="Fiche 01" cmd="ls projets/ --featured" class="mb-1.5" />
-              <h2 class="font-display text-[clamp(40px,5vw,52px)] font-black uppercase leading-none">Projets</h2>
+              <PromptLabel :code="`${t('common.file')} 01`" :cmd="t('home.projectsCmd')" class="mb-1.5" />
+              <h2 class="font-display text-[clamp(40px,5vw,52px)] font-black uppercase leading-none">{{ t('home.projects') }}</h2>
             </div>
-            <router-link to="/projects" class="inline-flex min-h-[44px] items-center border-2 border-lilac bg-surface px-4 py-2 font-mono text-[13px] font-bold text-bg-light shadow-dur-3 hover:text-bg-light">ls projets/ ({{ projects.length }}) →</router-link>
+            <router-link to="/projects" class="inline-flex min-h-[44px] items-center border-2 border-lilac bg-surface px-4 py-2 font-mono text-[13px] font-bold text-bg-light shadow-dur-3 hover:text-bg-light">{{ t('home.projectsAll', { n: projects.length }) }}</router-link>
           </div>
 
           <div class="grid grid-cols-1 gap-x-10 gap-y-14 lg:grid-cols-2">
@@ -111,8 +109,8 @@
               :tab="`#${String(i + 1).padStart(2, '0')} · ${categoryTab(p.category)}`"
               :tab-tone="i === 0 ? 'primary' : 'dark'"
               :shadow="i === 0 ? 'primary' : 'dark'"
-              :stamp="stampOf(p).label"
-              :stamp-tone="stampOf(p).tone"
+              :stamp="tr(statusOf(p).stamp)"
+              :stamp-tone="statusOf(p).tone"
               :stamp-rotate="i % 2 === 0 ? -8 : 6"
               stamp-class="-bottom-[18px] -right-2 sm:-right-3"
             >
@@ -121,17 +119,17 @@
                 <span v-if="p.repo" class="truncate font-mono text-xs text-lilac">{{ repoLabel(p.repo) }}</span>
               </div>
               <div class="flex flex-col gap-4 p-5">
-                <img v-if="p.image" :src="p.image" :alt="`Capture de ${p.title}`" class="block h-[170px] w-full border-2 border-line object-cover" loading="lazy" />
+                <img v-if="p.image" :src="p.image" :alt="t('home.screenshot', { title: p.title })" class="block h-[170px] w-full border-2 border-line object-cover" loading="lazy" />
                 <div v-else class="flex h-[170px] items-center justify-center border-2 border-dashed border-line bg-ink font-display text-4xl font-black uppercase text-line" aria-hidden="true">{{ p.title }}</div>
-                <p class="font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent-text">{{ p.context }}</p>
-                <p class="text-muted-light">{{ p.pitch }}</p>
+                <p class="font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent-text">{{ tr(p.context) }}</p>
+                <p class="text-muted-light">{{ tr(p.pitch) }}</p>
                 <TagList :items="p.tech.slice(0, 4)" />
                 <div class="flex flex-wrap gap-3 font-mono text-sm font-bold">
                   <router-link
                     :to="{ name: 'Projects', query: { project: p.key } }"
                     class="inline-flex min-h-[44px] items-center border-2 border-bg-light bg-bg-light px-4 py-2 text-primary-dark shadow-dur-3 hover:text-primary-dark"
-                  >ouvrir<span class="sr-only"> la fiche {{ p.title }}</span>&nbsp;→</router-link>
-                  <a v-if="p.repo" :href="p.repo" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[44px] items-center px-1.5 py-2">code<span class="sr-only"> de {{ p.title }}</span>&nbsp;↗</a>
+                  >{{ t('home.open') }}<span class="sr-only">{{ t('home.openSr', { title: p.title }) }}</span>&nbsp;→</router-link>
+                  <a v-if="p.repo" :href="p.repo" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[44px] items-center px-1.5 py-2">code<span class="sr-only">{{ t('home.codeSr', { title: p.title }) }}</span>&nbsp;↗</a>
                 </div>
               </div>
             </Fiche>
@@ -141,8 +139,8 @@
         <!-- Fiche 02 · stack -->
         <section class="flex flex-col gap-8 border-t-2 border-dashed border-line pt-14">
           <div>
-            <PromptLabel code="Fiche 02" cmd="cat stack.json" class="mb-1.5" />
-            <h2 class="font-display text-[clamp(40px,5vw,52px)] font-black uppercase leading-none">Compétences</h2>
+            <PromptLabel :code="`${t('common.file')} 02`" cmd="cat stack.json" class="mb-1.5" />
+            <h2 class="font-display text-[clamp(40px,5vw,52px)] font-black uppercase leading-none">{{ t('home.skills') }}</h2>
           </div>
 
           <div class="flex flex-wrap items-start gap-10">
@@ -164,9 +162,9 @@
 
             <Fiche v-if="besideCode.length" tag="div" tab="~/.config" class="min-w-0 flex-[1_1_300px]">
               <div class="flex flex-col gap-3 p-5">
-                <h3 class="font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted">À côté du code</h3>
+                <h3 class="font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted">{{ t('home.beside') }}</h3>
                 <ul class="flex flex-col gap-2 text-muted-light">
-                  <li v-for="item in besideCode" :key="item"><span class="font-mono text-accent-text" aria-hidden="true">→</span> {{ item }}</li>
+                  <li v-for="(item, i) in besideCode" :key="i"><span class="font-mono text-accent-text" aria-hidden="true">→</span> {{ tr(item) }}</li>
                 </ul>
               </div>
             </Fiche>
@@ -176,25 +174,25 @@
         <!-- Fiche 03 · musique (statistiques ListenBrainz) -->
         <section class="flex flex-col gap-8 border-t-2 border-dashed border-line pt-14" aria-labelledby="titre-musique">
           <div>
-            <PromptLabel code="Fiche 03" cmd="tmux attach -t music" class="mb-1.5" />
-            <h2 id="titre-musique" class="font-display text-[clamp(40px,5vw,52px)] font-black uppercase leading-none">Musique</h2>
-            <p class="mt-4 max-w-[640px] text-muted-light">Mes écoutes, suivies avec ListenBrainz et mises à jour toutes les 6 heures.</p>
+            <PromptLabel :code="`${t('common.file')} 03`" cmd="tmux attach -t music" class="mb-1.5" />
+            <h2 id="titre-musique" class="font-display text-[clamp(40px,5vw,52px)] font-black uppercase leading-none">{{ t('home.music') }}</h2>
+            <p class="mt-4 max-w-[640px] text-muted-light">{{ t('home.musicIntro') }}</p>
           </div>
           <MusicStats />
         </section>
 
         <!-- Fiche 04 · alternance -->
         <section v-if="search.open" class="relative flex flex-col gap-5 border-2 border-lilac bg-primary-dark p-6 shadow-dur-10 sm:p-12">
-          <PromptLabel code="Fiche 04" :cmd="search.command" light />
-          <h2 class="max-w-[780px] font-display text-[clamp(30px,4vw,54px)] font-black uppercase leading-[1.04]">{{ search.headline }}</h2>
-          <p class="max-w-[640px] text-muted-light">{{ search.text }}</p>
+          <PromptLabel :code="`${t('common.file')} 04`" :cmd="tr(search.command)" light />
+          <h2 class="max-w-[780px] font-display text-[clamp(30px,4vw,54px)] font-black uppercase leading-[1.04]">{{ tr(search.headline) }}</h2>
+          <p class="max-w-[640px] text-muted-light">{{ tr(search.text) }}</p>
           <div class="flex flex-wrap gap-3.5 font-mono text-sm font-bold">
             <button type="button" class="min-h-[48px] border-2 border-bg-light bg-bg-light px-5 py-3 text-primary-dark shadow-dur-4" @click="openContact">./contact.sh →</button>
             <a :href="cvUrl" download="CV_Harry_Troule.pdf" class="inline-flex min-h-[48px] items-center border-2 border-bg-light px-5 py-3 text-bg-light hover:text-bg-light">cv.pdf ↓</a>
             <a :href="contact.linkedin" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[48px] items-center px-2 py-3 text-lilac">linkedin ↗</a>
             <a :href="contact.github" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[48px] items-center px-2 py-3 text-lilac">github ↗</a>
           </div>
-          <Stamp label="Ouvert" tone="inverse" size="lg" :rotate="8" class="absolute right-9 top-9 hidden lg:block" />
+          <Stamp :label="stampOpen" tone="inverse" size="lg" :rotate="8" class="absolute right-9 top-9 hidden lg:block" />
         </section>
       </div>
     </div>
@@ -202,7 +200,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, onUnmounted } from 'vue'
+import { ref, computed, inject, onMounted, onUnmounted } from 'vue'
 import bgImage from '../assets/hero-bg.webp'
 import Marquee from '../components/Marquee.vue'
 import MusicStats from '../components/MusicStats.vue'
@@ -210,9 +208,10 @@ import Fiche from '../components/Fiche.vue'
 import Stamp from '../components/Stamp.vue'
 import TagList from '../components/TagList.vue'
 import PromptLabel from '../components/PromptLabel.vue'
-import { projects, categories, statusStamps } from '../data/projects.js'
+import { projects, categories, statuses } from '../data/projects.js'
 import { contact, whoami, profileYml, search, stack, besideCode } from '../data/profile.js'
 import { linkedinPath, githubPath } from '../data/icons.js'
+import { t, tr, locale } from '../i18n'
 
 const emit = defineEmits(['update-scroll'])
 
@@ -224,21 +223,22 @@ const cvUrl = import.meta.env.BASE_URL + 'CV.pdf'
 const profileUrl = import.meta.env.BASE_URL + 'images/profile.webp'
 
 const featured = projects.filter((p) => p.featured)
+const stampOpen = computed(() => (locale.value === 'fr' ? 'Ouvert' : 'Open'))
 
-const categoryTab = (key) => categories.find((c) => c.key === key)?.tab || key
-const stampOf = (p) => statusStamps[p.status] || { label: p.status, tone: 'default' }
+const categoryTab = (key) => tr(categories.find((c) => c.key === key)?.tab) || key
+const statusOf = (p) => statuses[p.status] || statuses.done
 const repoLabel = (url) => url.replace(/^https:\/\/github\.com\//, '')
 
 // Lignes du fichier stack.json
-const stackLines = [
+const stackLines = computed(() => [
   { brace: '{' },
   ...stack.map((entry, i) => ({
-    key: entry.key,
-    values: entry.values.map((v) => `"${v}"`).join(', '),
+    key: tr(entry.key),
+    values: entry.values.map((v) => `"${tr(v)}"`).join(', '),
     last: i === stack.length - 1
   })),
   { brace: '}' }
-]
+])
 
 const scrollToContent = () => {
   contentSection.value?.scrollIntoView({ behavior: 'smooth' })

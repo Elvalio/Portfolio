@@ -1,6 +1,6 @@
 <template>
   <section
-    aria-label="Dernières entrées du parcours"
+    :aria-label="t('marquee.label')"
     class="overflow-hidden whitespace-nowrap border-y-2 border-lilac bg-primary py-3 font-mono text-[13px] tracking-[0.04em] text-white"
   >
     <p class="defile m-0">
@@ -15,21 +15,23 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { timeline } from '../data/timeline.js'
 import { search } from '../data/profile.js'
+import { t, tr } from '../i18n'
 
 // Bandeau façon `git log --oneline`, du plus récent au plus ancien, généré
 // depuis la frise et le statut de recherche.
-const entries = [
+const entries = computed(() => [
   ...[...timeline]
     .reverse()
     .filter((step) => step.ticker)
     .map((step) => ({
       prefix: step.type === 'en-cours' ? '(HEAD → main)' : '',
-      lead: step.ticker,
+      lead: tr(step.ticker),
       rest: '',
       bold: false
     })),
-  ...(search.open ? [{ prefix: '', lead: search.command, rest: search.ticker, bold: true }] : [])
-]
+  ...(search.open ? [{ prefix: '', lead: tr(search.command), rest: tr(search.ticker), bold: true }] : [])
+])
 </script>

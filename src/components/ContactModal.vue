@@ -14,7 +14,7 @@
           class="relative mx-auto mt-7 w-full max-w-[760px]"
           @keydown="onKeydown"
         >
-          <span class="absolute -top-[26px] left-4 border-2 border-b-0 border-lilac bg-primary px-3 py-0.5 font-mono text-xs font-bold leading-5 text-white">Fiche CT · nouveau message</span>
+          <span class="absolute -top-[26px] left-4 border-2 border-b-0 border-lilac bg-primary px-3 py-0.5 font-mono text-xs font-bold leading-5 text-white">{{ t('contact.tab') }}</span>
 
           <div class="border-2 border-lilac bg-surface shadow-dur-12">
             <!-- Barre de titre -->
@@ -28,7 +28,7 @@
               <button
                 type="button"
                 class="inline-flex h-11 w-11 flex-none items-center justify-center border-2 border-lilac text-bg-light"
-                aria-label="Fermer"
+                :aria-label="t('contact.close')"
                 @click="closeModal"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
@@ -37,28 +37,28 @@
 
             <div class="flex flex-col gap-6 p-5 sm:p-8">
               <div>
-                <h2 id="titre-contact" class="font-display text-[40px] font-black uppercase leading-none">Me contacter</h2>
-                <p class="mt-2.5 text-muted-light">Une offre d'alternance, une question sur un projet : je réponds généralement sous 48 heures.</p>
+                <h2 id="titre-contact" class="font-display text-[40px] font-black uppercase leading-none">{{ t('contact.title') }}</h2>
+                <p class="mt-2.5 text-muted-light">{{ t('contact.intro') }}</p>
               </div>
 
               <form class="flex flex-col gap-[18px]" novalidate @submit.prevent="handleSubmit">
                 <div class="flex flex-wrap gap-[18px]">
                   <label class="flex flex-[1_1_260px] flex-col gap-1.5 text-sm text-muted-light">
-                    <span><span class="font-mono text-accent-text">--nom</span>  Nom complet</span>
-                    <input ref="firstField" v-model="form.name" type="text" autocomplete="name" placeholder="Prénom Nom" required :class="fieldClass" />
+                    <span><span class="font-mono text-accent-text">{{ t('contact.flagName') }}</span>  {{ t('contact.name') }}</span>
+                    <input ref="firstField" v-model="form.name" type="text" autocomplete="name" :placeholder="t('contact.namePlaceholder')" required :class="fieldClass" />
                   </label>
                   <label class="flex flex-[1_1_260px] flex-col gap-1.5 text-sm text-muted-light">
-                    <span><span class="font-mono text-accent-text">--email</span>  Adresse e-mail</span>
-                    <input v-model="form.email" type="email" autocomplete="email" placeholder="vous@entreprise.fr" required :class="fieldClass" />
+                    <span><span class="font-mono text-accent-text">--email</span>  {{ t('contact.email') }}</span>
+                    <input v-model="form.email" type="email" autocomplete="email" :placeholder="t('contact.emailPlaceholder')" required :class="fieldClass" />
                   </label>
                 </div>
                 <label class="flex flex-col gap-1.5 text-sm text-muted-light">
-                  <span><span class="font-mono text-accent-text">--sujet</span>  Sujet</span>
-                  <input v-model="form.subject" type="text" placeholder="Alternance développeur" required :class="fieldClass" />
+                  <span><span class="font-mono text-accent-text">{{ t('contact.flagSubject') }}</span>  {{ t('contact.subject') }}</span>
+                  <input v-model="form.subject" type="text" :placeholder="t('contact.subjectPlaceholder')" required :class="fieldClass" />
                 </label>
                 <label class="flex flex-col gap-1.5 text-sm text-muted-light">
-                  <span><span class="font-mono text-accent-text">--message</span>  Message</span>
-                  <textarea v-model="form.message" rows="6" placeholder="Bonjour Harry, …" required :class="[fieldClass, 'resize-y']"></textarea>
+                  <span><span class="font-mono text-accent-text">--message</span>  {{ t('contact.message') }}</span>
+                  <textarea v-model="form.message" rows="6" :placeholder="t('contact.messagePlaceholder')" required :class="[fieldClass, 'resize-y']"></textarea>
                 </label>
 
                 <!-- Piège anti-spam : invisible pour les visiteurs, coché par les robots -->
@@ -69,15 +69,15 @@
                     type="submit"
                     class="min-h-[48px] border-2 border-bg-light bg-bg-light px-[22px] py-3 text-primary-dark shadow-dur-4 disabled:opacity-60"
                     :disabled="status === 'loading'"
-                  >envoyer ↵</button>
-                  <button type="button" class="min-h-[48px] border-2 border-line px-[22px] py-3 text-bg-light" @click="closeModal">annuler</button>
+                  >{{ t('contact.send') }}</button>
+                  <button type="button" class="min-h-[48px] border-2 border-line px-[22px] py-3 text-bg-light" @click="closeModal">{{ t('contact.cancel') }}</button>
                 </div>
               </form>
 
               <!-- Sortie du script -->
               <div class="flex flex-col gap-1 border border-line bg-ink-deep px-4 py-3.5 font-mono text-[13px]" role="status" aria-live="polite">
                 <p v-if="output" :class="output.tone">
-                  {{ output.text }}<template v-if="output.mail"> · écrivez à <a :href="`mailto:${contact.email}`">{{ contact.email }}</a></template>
+                  {{ output.text }}<template v-if="output.mail">{{ t('contact.writeTo') }}<a :href="`mailto:${contact.email}`">{{ contact.email }}</a></template>
                 </p>
                 <p class="mt-1 flex items-center gap-1.5" aria-hidden="true">
                   <span class="text-accent-text">$</span><span class="curseur inline-block h-4 w-2 bg-accent-text"></span>
@@ -85,7 +85,7 @@
               </div>
 
               <p class="text-sm text-muted-light">
-                Ou directement : <a :href="`mailto:${contact.email}`" class="font-mono">{{ contact.email }}</a>
+                {{ t('contact.direct') }} <a :href="`mailto:${contact.email}`" class="font-mono">{{ contact.email }}</a>
                 · <a :href="contact.linkedin" target="_blank" rel="noopener noreferrer" class="font-mono">linkedin ↗</a>
               </p>
             </div>
@@ -99,6 +99,7 @@
 <script setup>
 import { reactive, ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
 import { contact, web3formsAccessKey } from '../data/profile.js'
+import { t } from '../i18n'
 
 const props = defineProps({
   isOpen: {
@@ -129,11 +130,11 @@ let opener = null
 // Ligne affichée dans la sortie du script
 const output = computed(() => ({
   idle: null,
-  loading: { text: '[..]  envoi en cours…', tone: 'text-muted', mail: false },
-  success: { text: '[ok]  message envoyé · réponse sous 48 h', tone: 'text-lilac', mail: false },
-  invalid: { text: '[err] remplissez les quatre champs, avec une adresse e-mail valide', tone: 'text-lilac', mail: false },
-  unavailable: { text: '[err] formulaire indisponible pour le moment', tone: 'text-lilac', mail: true },
-  error: { text: '[err] envoi impossible', tone: 'text-lilac', mail: true }
+  loading: { text: t('contact.loading'), tone: 'text-muted', mail: false },
+  success: { text: t('contact.success'), tone: 'text-lilac', mail: false },
+  invalid: { text: t('contact.invalid'), tone: 'text-lilac', mail: false },
+  unavailable: { text: t('contact.unavailable'), tone: 'text-lilac', mail: true },
+  error: { text: t('contact.error'), tone: 'text-lilac', mail: true }
 }[status.value]))
 
 const resetForm = () => Object.assign(form, emptyForm())
