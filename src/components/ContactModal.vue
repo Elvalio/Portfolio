@@ -53,6 +53,9 @@
             <textarea v-model="form.message" rows="6" class="mt-1 w-full rounded-lg bg-gray-900 border border-gray-700 px-3 py-2 focus:border-primary focus:ring-primary outline-none" placeholder="Bonjour Harry, ..." required></textarea>
           </label>
 
+          <!-- Piège anti-spam : invisible pour les visiteurs, coché par les robots -->
+          <input v-model="form.botcheck" type="checkbox" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
           <div class="flex flex-col gap-3 pt-4">
             <button type="submit" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition disabled:opacity-60 font-semibold" :disabled="status === 'loading'">
               <span v-if="status === 'loading'">Envoi...</span>
@@ -73,8 +76,7 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
-import emailjs from '@emailjs/browser'
-import { contact } from '../data/profile.js'
+import { contact, web3formsAccessKey } from '../data/profile.js'
 
 defineProps({
   isOpen: {
@@ -85,28 +87,35 @@ defineProps({
 
 const emit = defineEmits(['close'])
 
-const form = reactive({
+const emptyForm = () => ({
   name: '',
   email: '',
   subject: '',
-  message: ''
+  message: '',
+  botcheck: false
 })
+
+const form = reactive(emptyForm())
 
 const status = ref('idle')
 const feedback = ref('')
 
+const resetForm = () => Object.assign(form, emptyForm())
+
 const closeModal = () => {
   emit('close')
-  // Réinitialiser le formulaire
-  form.name = ''
-  form.email = ''
-  form.subject = ''
-  form.message = ''
+  resetForm()
   status.value = 'idle'
   feedback.value = ''
 }
 
-const handleSubmit = () => {
+const showSuccess = () => {
+  status.value = 'success'
+  resetForm()
+  setTimeout(closeModal, 2000)
+}
+
+const handleSubmit = async () => {
   if (status.value === 'loading') return
 
   if (!form.name.trim() || !form.email.trim() || !form.subject.trim() || !form.message.trim()) {
@@ -115,12 +124,14 @@ const handleSubmit = () => {
     return
   }
 
-  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
-  const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
-  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+  // Case anti-spam cochée : c'est un robot, on fait semblant d'avoir envoyé
+  if (form.botcheck) {
+    showSuccess()
+    return
+  }
 
-  // Sans configuration EmailJS, on renvoie vers l'adresse mail directement
-  if (!serviceId || !templateId || !publicKey) {
+  // Sans clé Web3Forms, on renvoie vers l'adresse mail directement
+  if (!web3formsAccessKey) {
     status.value = 'error'
     feedback.value = `Le formulaire est indisponible pour le moment. Écrivez-moi directement à ${contact.email}.`
     return
@@ -129,30 +140,28 @@ const handleSubmit = () => {
   status.value = 'loading'
   feedback.value = ''
 
-  const templateParams = {
-    name: form.name,
-    email: form.email,
-    title: form.subject,
-    message: form.message,
-    time: new Date().toLocaleString('fr-FR')
-  }
-
-  emailjs.send(serviceId, templateId, templateParams, publicKey)
-  .then(() => {
-    status.value = 'success'
-    form.name = ''
-    form.email = ''
-    form.subject = ''
-    form.message = ''
-    setTimeout(() => {
-      closeModal()
-    }, 2000)
-  })
-  .catch((err) => {
+  try {
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        access_key: web3formsAccessKey,
+        subject: `[Portfolio] ${form.subject}`,
+        name: form.name,
+        email: form.email, // devient l'adresse de réponse du mail reçu
+        message: form.message
+      })
+    })
+    const result = await response.json()
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || result.body?.message || `HTTP ${response.status}`)
+    }
+    showSuccess()
+  } catch (err) {
     status.value = 'error'
     feedback.value = `Erreur lors de l'envoi. Vous pouvez m'écrire directement à ${contact.email}.`
-    console.error('Erreur EmailJS', err)
-  })
+    console.error('Erreur Web3Forms', err)
+  }
 }
 </script>
 
