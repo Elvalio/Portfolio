@@ -18,7 +18,14 @@ export const web3formsAccessKey = 'd3b5ed0d-67e8-42b5-b326-19f72a349f2b'
 export const whoami = {
   title: 'Développeur fullstack, formé aux données.',
   text: "Je développe des applications web de bout en bout, de la base de données à l'interface. Après un BUT Informatique à Lannion et deux stages de développeur fullstack, je poursuis en Master ILSEN à Avignon.",
-  extra: ''
+  extra: "Curieux de nature, je bricole aussi en dehors des cours : homelab auto-hébergé, Stream Deck, et tout ce qui peut s'automatiser sous Linux."
+}
+
+// Statistiques d'écoute ListenBrainz : JSON public régénéré toutes les 6 h par
+// une GitHub Action du dépôt Elvalio/Elvalio (lu côté navigateur, sans clé).
+export const music = {
+  source: 'https://raw.githubusercontent.com/Elvalio/Elvalio/main/assets/music.json',
+  profile: 'https://listenbrainz.org/user/Elvalio/'
 }
 
 // Fiche « profil.yml » de l'accueil (clé → valeur)

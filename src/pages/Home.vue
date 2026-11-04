@@ -173,9 +173,19 @@
           </div>
         </section>
 
-        <!-- Fiche 03 · alternance -->
+        <!-- Fiche 03 · musique (statistiques ListenBrainz) -->
+        <section class="flex flex-col gap-8 border-t-2 border-dashed border-line pt-14" aria-labelledby="titre-musique">
+          <div>
+            <PromptLabel code="Fiche 03" cmd="tmux attach -t music" class="mb-1.5" />
+            <h2 id="titre-musique" class="font-display text-[clamp(40px,5vw,52px)] font-black uppercase leading-none">Musique</h2>
+            <p class="mt-4 max-w-[640px] text-muted-light">Mes écoutes, suivies avec ListenBrainz et mises à jour toutes les 6 heures.</p>
+          </div>
+          <MusicStats />
+        </section>
+
+        <!-- Fiche 04 · alternance -->
         <section v-if="search.open" class="relative flex flex-col gap-5 border-2 border-lilac bg-primary-dark p-6 shadow-dur-10 sm:p-12">
-          <PromptLabel code="Fiche 03" :cmd="search.command" light />
+          <PromptLabel code="Fiche 04" :cmd="search.command" light />
           <h2 class="max-w-[780px] font-display text-[clamp(30px,4vw,54px)] font-black uppercase leading-[1.04]">{{ search.headline }}</h2>
           <p class="max-w-[640px] text-muted-light">{{ search.text }}</p>
           <div class="flex flex-wrap gap-3.5 font-mono text-sm font-bold">
@@ -195,6 +205,7 @@
 import { ref, inject, onMounted, onUnmounted } from 'vue'
 import bgImage from '../assets/hero-bg.webp'
 import Marquee from '../components/Marquee.vue'
+import MusicStats from '../components/MusicStats.vue'
 import Fiche from '../components/Fiche.vue'
 import Stamp from '../components/Stamp.vue'
 import TagList from '../components/TagList.vue'
