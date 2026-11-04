@@ -77,8 +77,9 @@ export const besideCode = [
 ]
 
 // Statistiques d'écoute ListenBrainz : JSON public régénéré toutes les 30 min par
-// une GitHub Action du dépôt Elvalio/Elvalio (lu côté navigateur, sans clé).
+// une GitHub Action du dépôt Elvalio/Elvalio, publié sur sa branche « data »
+// (lu côté navigateur, sans clé).
 export const music = {
-  source: 'https://raw.githubusercontent.com/Elvalio/Elvalio/main/assets/music.json',
+  source: 'https://raw.githubusercontent.com/Elvalio/Elvalio/data/assets/music.json',
   profile: 'https://listenbrainz.org/user/Elvalio/'
 }
