@@ -11,7 +11,7 @@ export const contact = {
 // https://web3forms.com (elle est envoyée par mail à l'adresse saisie).
 // Elle est publique par conception : elle permet seulement d'envoyer des
 // messages vers cette adresse. Vide, le formulaire invite à écrire par mail.
-export const web3formsAccessKey = ''
+export const web3formsAccessKey = 'd3b5ed0d-67e8-42b5-b326-19f72a349f2b'
 
 export const skills = [
   { icon: '🎨', title: 'Front-end', detail: 'Vue.js, Tailwind CSS, HTML/CSS/JS' },
