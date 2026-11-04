@@ -72,10 +72,11 @@
 </template>
 
 <script setup>
-import { reactive, ref, defineProps, defineEmits } from 'vue'
+import { reactive, ref } from 'vue'
 import emailjs from '@emailjs/browser'
+import { contact } from '../data/profile.js'
 
-const props = defineProps({
+defineProps({
   isOpen: {
     type: Boolean,
     default: false
@@ -114,6 +115,17 @@ const handleSubmit = () => {
     return
   }
 
+  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+  const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
+  // Sans configuration EmailJS, on renvoie vers l'adresse mail directement
+  if (!serviceId || !templateId || !publicKey) {
+    status.value = 'error'
+    feedback.value = `Le formulaire est indisponible pour le moment. Écrivez-moi directement à ${contact.email}.`
+    return
+  }
+
   status.value = 'loading'
   feedback.value = ''
 
@@ -125,12 +137,7 @@ const handleSubmit = () => {
     time: new Date().toLocaleString('fr-FR')
   }
 
-  emailjs.send(
-    import.meta.env.VITE_EMAILJS_SERVICE_ID,
-    import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-    templateParams,
-    import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-  )
+  emailjs.send(serviceId, templateId, templateParams, publicKey)
   .then(() => {
     status.value = 'success'
     form.name = ''
@@ -143,7 +150,7 @@ const handleSubmit = () => {
   })
   .catch((err) => {
     status.value = 'error'
-    feedback.value = 'Erreur lors de l\'envoi. Vérifiez vos identifiants EmailJS.'
+    feedback.value = `Erreur lors de l'envoi. Vous pouvez m'écrire directement à ${contact.email}.`
     console.error('Erreur EmailJS', err)
   })
 }
